@@ -42,13 +42,13 @@ export default function Sidebar() {
       <nav className="p-4 flex-1 flex flex-col gap-2">
         <button 
           onClick={() => setAppMode('PLANNER')}
-          className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'PLANNER' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-amber border-transparent hover:border-foreground/20'}`}
+          className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'PLANNER' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-color-amber border-transparent hover:border-foreground/20'}`}
         >
           {appMode === 'PLANNER' ? '[ DAY PLANNER ]' : 'DAY PLANNER'}
         </button>
         <button 
           onClick={() => setAppMode('TIMER')}
-          className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'TIMER' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-amber border-transparent hover:border-foreground/20'}`}
+          className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'TIMER' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-color-amber border-transparent hover:border-foreground/20'}`}
         >
           {appMode === 'TIMER' ? '[ FOCUS TIMER ]' : 'FOCUS TIMER'}
         </button>
@@ -59,8 +59,8 @@ export default function Sidebar() {
         <div className="flex justify-between items-center mb-4">
           <span className="font-bold text-sm">{format(calendarDate, 'MMMM yyyy').toUpperCase()}</span>
           <div className="flex gap-2">
-            <button onClick={prevMonth} className="hover:text-amber">&lt;</button>
-            <button onClick={nextMonth} className="hover:text-amber">&gt;</button>
+            <button onClick={prevMonth} className="hover:text-color-amber">&lt;</button>
+            <button onClick={nextMonth} className="hover:text-color-amber">&gt;</button>
           </div>
         </div>
 

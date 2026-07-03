@@ -17,38 +17,40 @@ export default function CommandBar() {
 
   return (
     <header className="flex h-20 items-center justify-between border-b border-foreground px-6 bg-surface-raised uppercase text-sm font-bold">
-      <div className="flex gap-4">
-        <span className="text-amber">SYS.TIME {timeStr || '--:--:--'}</span>
-        <span className="opacity-50">DATE: {format(currentDate, 'yyyy.MM.dd')}</span>
+      <div className="flex items-center gap-6">
+        <span className="text-color-amber">SYS.TIME {timeStr || '--:--:--'}</span>
+        <span>
+          DATE: {format(currentDate, 'yyyy.MM.dd')}
+        </span>
       </div>
 
-      <div className="flex gap-1 text-sm font-bold">
+      <div className="flex items-center gap-4">
         <button 
           onClick={navigatePrevious}
-          className="hover:text-amber hover:bg-foreground/10 px-2 py-1 transition-colors"
+          className="hover:text-color-amber hover:bg-foreground/10 px-2 py-1 transition-colors"
         >
           &lt; PREV
         </button>
         <button 
           onClick={navigateNext}
-          className="hover:text-amber hover:bg-foreground/10 px-2 py-1 transition-colors"
+          className="hover:text-color-amber hover:bg-foreground/10 px-2 py-1 transition-colors"
         >
           NEXT &gt;
         </button>
       </div>
 
-      <div className="flex gap-2 text-sm font-bold bg-foreground/10 p-1">
+      <div className="flex items-center gap-4">
         <button 
           onClick={() => setViewMode('DAY')}
-          className={`px-2 py-1 transition-colors ${viewMode === 'DAY' ? 'text-green' : 'hover:text-amber'}`}
+          className={`px-2 py-1 transition-colors ${viewMode === 'DAY' ? 'text-color-green' : 'hover:text-color-amber'}`}
         >
-          DAY
+          {viewMode === 'DAY' ? '[ DAY ]' : 'DAY'}
         </button>
         <button 
           onClick={() => setViewMode('WEEK')}
-          className={`px-2 py-1 transition-colors ${viewMode === 'WEEK' ? 'text-green' : 'hover:text-amber'}`}
+          className={`px-2 py-1 transition-colors ${viewMode === 'WEEK' ? 'text-color-green' : 'hover:text-color-amber'}`}
         >
-          WEEK
+          {viewMode === 'WEEK' ? '[ WEEK ]' : 'WEEK'}
         </button>
       </div>
     </header>
