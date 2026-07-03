@@ -12,6 +12,7 @@ export default function TaskModal() {
   const [description, setDescription] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const [color, setColor] = useState('');
 
   useEffect(() => {
     if (block) {
@@ -20,6 +21,7 @@ export default function TaskModal() {
       setStartTime(block.startTime);
       const startMins = timeToMinutes(block.startTime);
       setEndTime(minutesToTime(startMins + block.duration));
+      setColor(block.color);
     }
   }, [block]);
 
@@ -33,7 +35,7 @@ export default function TaskModal() {
     }
     const duration = endMins - startMins;
 
-    updateBlock(block.id, { title, description, startTime, duration });
+    updateBlock(block.id, { title, description, startTime, duration, color });
     setSelectedBlockId(null);
   };
 
@@ -93,6 +95,20 @@ export default function TaskModal() {
             />
           </div>
 
+          <div>
+            <label className="block text-xs text-foreground/70 mb-1">BLOCK COLOR</label>
+            <div className="flex gap-2 flex-wrap">
+              {LEGACY_COLORS.map(c => (
+                <button
+                  key={c.name}
+                  onClick={() => setColor(c.value)}
+                  className={`w-8 h-8 border ${color === c.value ? 'border-foreground shadow-sm shadow-foreground/50 scale-110' : 'border-transparent'}`}
+                  style={{ backgroundColor: c.value }}
+                  title={c.name}
+                />
+              ))}
+            </div>
+          </div>
 
           <div className="flex justify-end gap-4 mt-4 pt-4 border-t border-foreground/20 text-sm">
             <button 

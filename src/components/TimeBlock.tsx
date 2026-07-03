@@ -54,27 +54,34 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
         right: '2px',
         transform: CSS.Translate.toString(transform),
         zIndex: isDragging ? 50 : 10,
-        backgroundColor: 'var(--surface)',
+        backgroundColor: block.color || 'var(--surface)',
         borderColor: 'var(--color-foreground)',
         borderWidth: '1px',
         borderStyle: 'solid',
         opacity: isDragging ? 0.8 : 1,
       }}
-      className="flex flex-col overflow-hidden text-xs cursor-pointer shadow-sm hover:z-20 transition-opacity"
-      onClick={(e) => {
-        // Only trigger click if we aren't dragging
-        if (!isDragging) {
-          onClick(block.id);
-        }
-      }}
+      className="flex flex-col overflow-hidden text-xs shadow-sm hover:z-20 transition-opacity relative group"
     >
+      <div className="absolute top-1 right-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isDragging) {
+              onClick(block.id);
+            }
+          }}
+          className="bg-background text-foreground border border-foreground/50 px-1 text-[10px] hover:bg-foreground hover:text-background transition-colors font-bold"
+        >
+          [E]
+        </button>
+      </div>
       <div 
         className="px-2 py-1 flex-1 min-h-0 overflow-hidden break-words text-foreground font-semibold"
         {...attributes}
         {...listeners}
       >
-        <div className="font-bold border-b border-foreground/20 pb-1 mb-1 truncate text-black">{block.title}</div>
-        {block.duration >= 30 && <div className="text-foreground/80 line-clamp-2">{block.description}</div>}
+        <div className="font-bold border-b border-foreground/20 pb-1 mb-1 pr-6 truncate text-black">{block.title}</div>
+        {block.duration >= 30 && <div className="text-black/80 line-clamp-2">{block.description}</div>}
       </div>
 
       <div
