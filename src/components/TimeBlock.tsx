@@ -10,16 +10,15 @@ interface TimeBlockProps {
   block: TimeBlockType;
   onClick: (id: string) => void;
   onResize: (id: string, deltaMins: number) => void;
-  timeOffset: number;
 }
 
-export default function TimeBlock({ block, onClick, onResize, timeOffset }: TimeBlockProps) {
+export default function TimeBlock({ block, onClick, onResize }: TimeBlockProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: block.id,
     data: { block },
   });
 
-  const topPx = timeToMinutes(block.startTime) * MINUTE_HEIGHT + timeOffset;
+  const topPx = timeToMinutes(block.startTime) * MINUTE_HEIGHT;
   const heightPx = block.duration * MINUTE_HEIGHT;
 
   const handlePointerDownResize = (e: React.PointerEvent) => {
