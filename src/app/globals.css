@@ -1,26 +1,65 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #E0D5BE;
+  --foreground: #050505;
+  --surface: #D0C3A5;
+  --surface-raised: #C0B18F;
+  --color-amber: #ff8800;
+  --color-amber-light: #ffa238;
+  --color-red: #cc2200;
+  --color-blue: #4466cc;
+  --color-teal: #6DC3BB;
+  --color-pink: #B53082;
+  --color-orange: #F2963A;
+  --color-purple: #381B57;
+  --color-green: #33cc33;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-amber: var(--color-amber);
+  --color-amber-light: var(--color-amber-light);
+  --color-red: var(--color-red);
+  --color-blue: var(--color-blue);
+  --color-teal: var(--color-teal);
+  --color-pink: var(--color-pink);
+  --color-orange: var(--color-orange);
+  --color-purple: var(--color-purple);
+  --color-green: var(--color-green);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-mono), monospace;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Sharp edges and retro terminal feel global utility overrides */
+* {
+  border-radius: 0 !important;
+}
+
+/* Custom scrollbar to match aesthetic */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+  border-left: 1px solid var(--foreground);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--foreground);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-red);
+}
+::-webkit-scrollbar-corner {
+  background: var(--surface);
 }
