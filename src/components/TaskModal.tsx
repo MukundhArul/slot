@@ -1,7 +1,7 @@
 'use client';
 
 import { useCalendarStore } from '@/store/useCalendarStore';
-import { LEGACY_COLORS } from '@/lib/constants';
+import { timeToMinutes, minutesToTime } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
 export default function TaskModal() {
@@ -10,20 +10,30 @@ export default function TaskModal() {
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [color, setColor] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
 
   useEffect(() => {
     if (block) {
       setTitle(block.title);
       setDescription(block.description);
-      setColor(block.color);
+      setStartTime(block.startTime);
+      const startMins = timeToMinutes(block.startTime);
+      setEndTime(minutesToTime(startMins + block.duration));
     }
   }, [block]);
 
   if (!block) return null;
 
   const handleUpdate = () => {
-    updateBlock(block.id, { title, description, color });
+    const startMins = timeToMinutes(startTime);
+    let endMins = timeToMinutes(endTime);
+    if (endMins <= startMins) {
+      endMins = startMins + 15; // default to 15m if invalid
+    }
+    const duration = endMins - startMins;
+
+    updateBlock(block.id, { title, description, startTime, duration });
     setSelectedBlockId(null);
   };
 
@@ -50,6 +60,27 @@ export default function TaskModal() {
               onChange={e => setTitle(e.target.value)}
               placeholder="Enter title..."
             />
+          </div>
+
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="block text-xs text-foreground/70 mb-1">FROM</label>
+              <input 
+                type="time"
+                className="w-full bg-background border border-foreground/50 p-2 text-foreground focus:outline-none focus:border-color-green transition-colors"
+                value={startTime}
+                onChange={e => setStartTime(e.target.value)}
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs text-foreground/70 mb-1">TO</label>
+              <input 
+                type="time"
+                className="w-full bg-background border border-foreground/50 p-2 text-foreground focus:outline-none focus:border-color-green transition-colors"
+                value={endTime}
+                onChange={e => setEndTime(e.target.value)}
+              />
+            </div>
           </div>
 
           <div>
