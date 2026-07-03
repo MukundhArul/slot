@@ -11,6 +11,7 @@ import TimeBlock from './TimeBlock';
 export default function CalendarGrid() {
   const { blocks, currentDate, viewMode, updateBlock, setSelectedBlockId, addBlock } = useCalendarStore();
   const gridRef = useRef<HTMLDivElement>(null);
+  const GRID_OFFSET = 16;
 
   // Compute days to show (Sunday start)
   const days = useMemo(() => {
@@ -67,7 +68,7 @@ export default function CalendarGrid() {
 
     const rect = e.currentTarget.getBoundingClientRect();
     const y = e.clientY - rect.top;
-    const minutes = snapToGrid((y / HOUR_HEIGHT) * 60 + hour * 60);
+    const minutes = snapToGrid(((y - GRID_OFFSET) / HOUR_HEIGHT) * 60 + hour * 60);
 
     const newBlock = {
       title: 'NEW TASK',
@@ -87,7 +88,7 @@ export default function CalendarGrid() {
       <div className="flex flex-col flex-1 overflow-hidden bg-background">
         {/* Grid Scroll Area */}
         <div className="flex-1 overflow-y-auto relative flex flex-col">
-          
+
           {/* Day Headers (Sticky) */}
           <div className="flex border-b border-foreground/50 bg-surface pl-16 sticky top-0 z-30">
             {days.map((day) => (
@@ -98,14 +99,14 @@ export default function CalendarGrid() {
           </div>
 
           {/* Grid Content */}
-          <div className="flex-1 flex mt-4">
+          <div className="flex-1 flex">
             {/* Time Y-Axis */}
-            <div className="w-16 relative border-r border-foreground/50 bg-surface sticky left-0 z-20" style={{ height: `${24 * HOUR_HEIGHT}px` }}>
+            <div className="w-16 relative border-r border-foreground/50 bg-surface sticky left-0 z-20" style={{ height: `${24 * HOUR_HEIGHT + GRID_OFFSET}px` }}>
               {HOURS.map((hour) => (
                 <div
                   key={hour}
                   className="absolute w-full text-xs text-right pr-2 font-bold text-foreground/70"
-                  style={{ top: `${hour * HOUR_HEIGHT}px`, transform: 'translateY(-50%)', zIndex: 10 }}
+                  style={{ top: `${hour * HOUR_HEIGHT + GRID_OFFSET}px`, transform: 'translateY(-50%)', zIndex: 10 }}
                 >
                   <span className="bg-surface px-1">{hour.toString().padStart(2, '0')}:00</span>
                 </div>
@@ -119,13 +120,13 @@ export default function CalendarGrid() {
                 const dayBlocks = blocks.filter(b => b.date === dayStr);
 
                 return (
-                  <div key={dayStr} className="flex-1 relative border-r border-foreground/20 min-w-0" style={{ height: `${24 * HOUR_HEIGHT}px` }}>
+                  <div key={dayStr} className="flex-1 relative border-r border-foreground/20 min-w-0" style={{ height: `${24 * HOUR_HEIGHT + GRID_OFFSET}px` }}>
                     {/* Grid Lines and Clickable Area */}
                     {HOURS.map(hour => (
                       <div
                         key={hour}
                         className="absolute w-full border-t border-foreground/10 border-dashed cursor-crosshair"
-                        style={{ top: `${hour * HOUR_HEIGHT}px`, height: `${HOUR_HEIGHT}px` }}
+                        style={{ top: `${hour * HOUR_HEIGHT + GRID_OFFSET}px`, height: `${HOUR_HEIGHT}px` }}
                         onClick={(e) => handleGridClick(day, hour, e)}
                       />
                     ))}
@@ -137,6 +138,7 @@ export default function CalendarGrid() {
                         block={block}
                         onClick={setSelectedBlockId}
                         onResize={handleResize}
+                        timeOffset={GRID_OFFSET}
                       />
                     ))}
                   </div>
