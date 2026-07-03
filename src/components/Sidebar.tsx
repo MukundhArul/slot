@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export default function Sidebar() {
-  const { currentDate, setCurrentDate } = useCalendarStore();
+  const { currentDate, setCurrentDate, appMode, setAppMode } = useCalendarStore();
   const [calendarDate, setCalendarDate] = useState(currentDate);
 
   // Calculate grid for mini calendar
@@ -40,11 +40,17 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="p-4 flex-1 flex flex-col gap-2">
-        <button className="text-left px-3 py-2 bg-foreground text-background font-bold uppercase transition-colors">
-          [ DAY PLANNER ]
+        <button 
+          onClick={() => setAppMode('PLANNER')}
+          className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'PLANNER' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-color-amber border-transparent hover:border-foreground/20'}`}
+        >
+          {appMode === 'PLANNER' ? '[ DAY PLANNER ]' : 'DAY PLANNER'}
         </button>
-        <button className="text-left px-3 py-2 hover:bg-foreground/10 hover:text-color-amber font-bold uppercase transition-colors border border-transparent hover:border-foreground/20">
-          FOCUS TIMER
+        <button 
+          onClick={() => setAppMode('TIMER')}
+          className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'TIMER' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-color-amber border-transparent hover:border-foreground/20'}`}
+        >
+          {appMode === 'TIMER' ? '[ FOCUS TIMER ]' : 'FOCUS TIMER'}
         </button>
       </nav>
 

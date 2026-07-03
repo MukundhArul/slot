@@ -16,6 +16,7 @@ interface CalendarState {
   currentDate: Date;
   viewMode: 'DAY' | 'WEEK';
   selectedBlockId: string | null;
+  appMode: 'PLANNER' | 'TIMER';
 
   addBlock: (block: Omit<TimeBlock, 'id'>) => void;
   updateBlock: (id: string, updates: Partial<TimeBlock>) => void;
@@ -24,6 +25,7 @@ interface CalendarState {
   setCurrentDate: (date: Date) => void;
   setViewMode: (mode: 'DAY' | 'WEEK') => void;
   setSelectedBlockId: (id: string | null) => void;
+  setAppMode: (mode: 'PLANNER' | 'TIMER') => void;
 
   navigatePrevious: () => void;
   navigateNext: () => void;
@@ -34,6 +36,7 @@ export const useCalendarStore = create<CalendarState>((set) => ({
   currentDate: new Date(),
   viewMode: 'WEEK',
   selectedBlockId: null,
+  appMode: 'PLANNER',
 
   addBlock: (block) => set((state) => ({
     blocks: [...state.blocks, { ...block, id: Math.random().toString(36).substring(2, 9) }],
@@ -51,6 +54,7 @@ export const useCalendarStore = create<CalendarState>((set) => ({
   setCurrentDate: (date) => set({ currentDate: date }),
   setViewMode: (mode) => set({ viewMode: mode }),
   setSelectedBlockId: (id) => set({ selectedBlockId: id }),
+  setAppMode: (mode) => set({ appMode: mode }),
 
   navigatePrevious: () => set((state) => ({
     currentDate: addDays(state.currentDate, state.viewMode === 'DAY' ? -1 : -7)

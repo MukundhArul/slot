@@ -93,7 +93,7 @@ export default function CalendarGrid() {
           <div className="flex border-b border-foreground/50 bg-surface pl-16 sticky top-0 z-30">
             {days.map((day) => (
               <div key={day.toISOString()} className="flex-1 text-center py-2 border-r border-foreground/20 text-sm font-bold truncate">
-                {format(day, 'EEE MM/dd').toUpperCase()}
+                {format(day, 'EEE dd/MM').toUpperCase()}
               </div>
             ))}
           </div>
