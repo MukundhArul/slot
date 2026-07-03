@@ -2,6 +2,7 @@
 
 import { useCalendarStore } from '@/store/useCalendarStore';
 import { timeToMinutes, minutesToTime } from '@/lib/utils';
+import { LEGACY_COLORS } from '@/lib/constants';
 import { useEffect, useState } from 'react';
 
 export default function TaskModal() {
