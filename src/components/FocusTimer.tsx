@@ -65,13 +65,13 @@ export default function FocusTimer() {
         <div className="flex gap-6">
           <button 
             onClick={() => switchMode('FOCUS')}
-            className={`px-6 py-2 font-bold tracking-widest text-sm transition-all border ${mode === 'FOCUS' ? 'bg-color-red text-background border-color-red shadow-[0_0_15px_var(--color-red)]' : 'border-foreground/30 text-foreground/50 hover:border-foreground hover:text-foreground'}`}
+            className={`px-6 py-2 font-bold tracking-widest text-sm transition-all border ${mode === 'FOCUS' ? 'bg-color-red text-black border-color-red' : 'border-foreground/30 text-foreground/50 hover:border-foreground hover:text-foreground'}`}
           >
             {mode === 'FOCUS' ? '[ FOCUS ]' : 'FOCUS'}
           </button>
           <button 
             onClick={() => switchMode('BREAK')}
-            className={`px-6 py-2 font-bold tracking-widest text-sm transition-all border ${mode === 'BREAK' ? 'bg-color-blue text-background border-color-blue shadow-[0_0_15px_var(--color-blue)]' : 'border-foreground/30 text-foreground/50 hover:border-foreground hover:text-foreground'}`}
+            className={`px-6 py-2 font-bold tracking-widest text-sm transition-all border ${mode === 'BREAK' ? 'bg-color-blue text-black border-color-blue' : 'border-foreground/30 text-foreground/50 hover:border-foreground hover:text-foreground'}`}
           >
             {mode === 'BREAK' ? '[ BREAK ]' : 'BREAK'}
           </button>
