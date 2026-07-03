@@ -16,7 +16,7 @@ export default function CommandBar() {
   }, []);
 
   return (
-    <header className="flex items-center justify-between border-b border-foreground p-4 bg-surface-raised uppercase text-sm font-bold shadow-md">
+    <header className="flex h-20 items-center justify-between border-b border-foreground px-6 bg-surface-raised uppercase text-sm font-bold">
       <div className="flex items-center gap-6">
         <span className="text-color-amber">SYS.TIME {timeStr || '--:--:--'}</span>
         <span>
