@@ -59,7 +59,7 @@ export default function FocusTimer() {
       {/* Timer Container */}
       <div className="z-10 flex flex-col items-center gap-12 p-16 border border-foreground/20 bg-surface/80 backdrop-blur-md relative shadow-[0_0_50px_rgba(0,0,0,0.5)]">
         {/* Glowing top accent line */}
-        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-color-amber to-transparent opacity-70" />
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber to-transparent opacity-70" />
         
         {/* Mode Selector */}
         <div className="flex gap-6">
@@ -82,11 +82,11 @@ export default function FocusTimer() {
           <div className="text-[10rem] leading-none font-black tracking-tighter text-foreground drop-shadow-[0_0_25px_rgba(255,255,255,0.15)]">
             {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
           </div>
-          <div className="mt-8 text-color-amber font-bold tracking-widest text-lg">
+          <div className="mt-8 text-amber font-bold tracking-widest text-lg">
             {asciiBar}
           </div>
           <div className="mt-4 text-xs text-foreground/50 tracking-widest uppercase flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-color-amber animate-pulse shadow-[0_0_8px_var(--color-amber)]' : 'bg-foreground/30'}`}></span>
+            <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-amber animate-pulse shadow-[0_0_8px_var(--color-amber)]' : 'bg-foreground/30'}`}></span>
             SYSTEM STATUS: {isActive ? 'ACTIVE' : 'STANDBY'}
           </div>
         </div>
@@ -95,13 +95,13 @@ export default function FocusTimer() {
         <div className="flex gap-8 mt-4">
           <button 
             onClick={toggleTimer}
-            className="px-10 py-4 bg-foreground text-background font-bold tracking-widest hover:bg-color-amber hover:text-black transition-all border border-foreground hover:border-color-amber shadow-[0_0_10px_transparent] hover:shadow-[0_0_20px_var(--color-amber)] uppercase text-lg"
+            className="px-10 py-4 bg-foreground text-background font-bold tracking-widest hover:bg-amber hover:text-black transition-all border border-foreground hover:border-amber shadow-[0_0_10px_transparent] hover:shadow-[0_0_20px_var(--color-amber)] uppercase text-lg"
           >
             {isActive ? '[ PAUSE ]' : '[ START ]'}
           </button>
           <button 
             onClick={resetTimer}
-            className="px-10 py-4 bg-transparent text-foreground font-bold tracking-widest hover:bg-color-red hover:text-background transition-all border border-foreground/30 hover:border-color-red uppercase text-lg"
+            className="px-10 py-4 bg-transparent text-foreground font-bold tracking-widest hover:bg-red hover:text-background transition-all border border-foreground/30 hover:border-red uppercase text-lg"
           >
             [ RESET ]
           </button>
