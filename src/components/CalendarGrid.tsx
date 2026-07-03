@@ -95,19 +95,20 @@ export default function CalendarGrid() {
         </div>
 
         {/* Grid Scroll Area */}
-        <div className="flex-1 overflow-y-auto relative flex">
-          {/* Time Y-Axis */}
-          <div className="w-16 relative border-r border-foreground/50 bg-surface sticky left-0 z-20" style={{ height: `${24 * HOUR_HEIGHT}px` }}>
-            {HOURS.map((hour) => (
-              <div 
-                key={hour} 
-                className="absolute w-full text-xs text-right pr-2 font-bold text-foreground/70"
-                style={{ top: `${hour * HOUR_HEIGHT}px` }}
-              >
-                <span className="relative -top-2 bg-surface px-1">{hour.toString().padStart(2, '0')}:00</span>
-              </div>
-            ))}
-          </div>
+        <div className="flex-1 overflow-y-auto relative">
+          <div className="flex pt-4 pb-12">
+            {/* Time Y-Axis */}
+            <div className="w-16 relative border-r border-foreground/50 bg-surface sticky left-0 z-20" style={{ height: `${24 * HOUR_HEIGHT}px` }}>
+              {HOURS.map((hour) => (
+                <div 
+                  key={hour} 
+                  className="absolute w-full text-xs text-right pr-2 font-bold text-foreground/70"
+                  style={{ top: `${hour * HOUR_HEIGHT}px`, transform: 'translateY(-50%)', zIndex: 10 }}
+                >
+                  <span className="bg-surface px-1">{hour.toString().padStart(2, '0')}:00</span>
+                </div>
+              ))}
+            </div>
 
           {/* Grid Area */}
           <div className="flex-1 flex" ref={gridRef}>
@@ -139,6 +140,7 @@ export default function CalendarGrid() {
                 </div>
               );
             })}
+          </div>
           </div>
         </div>
       </div>

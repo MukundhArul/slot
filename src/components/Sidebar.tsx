@@ -65,16 +65,21 @@ export default function Sidebar() {
         <div className="grid grid-cols-7 gap-1 text-center text-xs">
           {days.map((day, idx) => {
             const isSelected = isSameDay(day, currentDate);
+            const isToday = isSameDay(day, new Date());
             const isCurrentMonth = isSameMonth(day, monthStart);
             return (
               <button
                 key={idx}
                 onClick={() => setCurrentDate(day)}
                 className={`
-                  aspect-square flex items-center justify-center transition-colors
+                  aspect-square flex items-center justify-center transition-colors relative
                   ${!isCurrentMonth ? 'text-foreground/30' : 'hover:bg-foreground/10'}
-                  ${isSelected ? 'rounded-full border !border-color-red text-foreground !bg-transparent' : ''}
+                  ${isSelected ? 'bg-foreground/20 font-black' : ''}
+                  ${isToday ? 'rounded-full border text-foreground bg-transparent' : ''}
                 `}
+                style={{
+                  borderColor: isToday ? 'var(--color-red)' : 'transparent'
+                }}
               >
                 {format(day, dateFormat)}
               </button>
