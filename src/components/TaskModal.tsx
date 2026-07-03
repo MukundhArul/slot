@@ -38,7 +38,7 @@ export default function TaskModal() {
       >
         <div className="bg-color-green text-background px-4 py-2 font-bold uppercase flex justify-between">
           <span>&gt; EDIT_TASK.exe</span>
-          <button onClick={() => setSelectedBlockId(null)} className="hover:text-color-red">[ X ]</button>
+          <button onClick={() => setSelectedBlockId(null)} className="text-color-red hover:bg-color-red/20 px-1 font-bold">[ X ]</button>
         </div>
 
         <div className="p-6 flex flex-col gap-4">

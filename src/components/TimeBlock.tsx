@@ -55,7 +55,7 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
         transform: CSS.Translate.toString(transform),
         zIndex: isDragging ? 50 : 10,
         backgroundColor: 'var(--surface)',
-        borderColor: block.color,
+        borderColor: 'var(--color-foreground)',
         borderWidth: '1px',
         borderStyle: 'solid',
         opacity: isDragging ? 0.8 : 1,
@@ -73,7 +73,7 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
         {...attributes}
         {...listeners}
       >
-        <div className="font-bold border-b border-foreground/20 pb-1 mb-1 truncate">{block.title}</div>
+        <div className="font-bold border-b border-foreground/20 pb-1 mb-1 truncate text-black">{block.title}</div>
         {block.duration >= 30 && <div className="text-foreground/80 line-clamp-2">{block.description}</div>}
       </div>
 
