@@ -3,7 +3,7 @@
 import { useCalendarStore } from '@/store/useCalendarStore';
 import { 
   startOfMonth, endOfMonth, startOfWeek, endOfWeek, 
-  eachDayOfInterval, isSameMonth, isSameDay, format, addMonths 
+  eachDayOfInterval, isSameMonth, isSameDay, format, addMonths, addDays
 } from 'date-fns';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -14,9 +14,10 @@ export default function Sidebar() {
 
   // Calculate grid for mini calendar
   const monthStart = startOfMonth(calendarDate);
-  const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart);
-  const endDate = endOfWeek(monthEnd);
+  
+  // Guarantee 42 days (6 weeks) for consistent calendar height
+  const endDate = addDays(startDate, 41);
 
   const dateFormat = "d";
   const days = eachDayOfInterval({
@@ -38,7 +39,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="p-4 border-b border-foreground flex flex-col gap-2">
+      <nav className="p-4 flex-1 flex flex-col gap-2">
         <button className="text-left px-3 py-2 bg-foreground text-background font-bold uppercase transition-colors">
           [ DAY PLANNER ]
         </button>
@@ -48,7 +49,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Mini Calendar */}
-      <div className="p-4 border-b border-foreground">
+      <div className="p-4 mt-auto">
         <div className="flex justify-between items-center mb-4">
           <span className="font-bold text-sm">{format(calendarDate, 'MMMM yyyy').toUpperCase()}</span>
           <div className="flex gap-2">
@@ -70,9 +71,9 @@ export default function Sidebar() {
                 key={idx}
                 onClick={() => setCurrentDate(day)}
                 className={`
-                  aspect-square flex items-center justify-center border transition-colors
-                  ${!isCurrentMonth ? 'text-foreground/30 border-transparent' : 'border-foreground/10 hover:border-foreground/50'}
-                  ${isSelected ? 'bg-color-amber text-background border-color-amber' : ''}
+                  aspect-square flex items-center justify-center transition-colors
+                  ${!isCurrentMonth ? 'text-foreground/30' : 'hover:bg-foreground/10'}
+                  ${isSelected ? 'rounded-full border !border-color-red text-foreground !bg-transparent' : ''}
                 `}
               >
                 {format(day, dateFormat)}

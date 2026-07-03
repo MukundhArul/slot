@@ -97,12 +97,12 @@ export default function CalendarGrid() {
         {/* Grid Scroll Area */}
         <div className="flex-1 overflow-y-auto relative flex">
           {/* Time Y-Axis */}
-          <div className="w-16 flex flex-col border-r border-foreground/50 bg-surface sticky left-0 z-20">
+          <div className="w-16 relative border-r border-foreground/50 bg-surface sticky left-0 z-20" style={{ height: `${24 * HOUR_HEIGHT}px` }}>
             {HOURS.map((hour) => (
               <div 
                 key={hour} 
-                className="text-xs text-right pr-2 font-bold text-foreground/70"
-                style={{ height: `${HOUR_HEIGHT}px` }}
+                className="absolute w-full text-xs text-right pr-2 font-bold text-foreground/70"
+                style={{ top: `${hour * HOUR_HEIGHT}px` }}
               >
                 <span className="relative -top-2 bg-surface px-1">{hour.toString().padStart(2, '0')}:00</span>
               </div>
@@ -116,29 +116,16 @@ export default function CalendarGrid() {
               const dayBlocks = blocks.filter(b => b.date === dayStr);
 
               return (
-                <div key={dayStr} className="flex-1 relative border-r border-foreground/20 min-w-0">
-                  {/* Grid Lines */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    {HOURS.map(hour => (
-                      <div 
-                        key={hour} 
-                        className="w-full border-t border-foreground/10 border-dashed"
-                        style={{ height: `${HOUR_HEIGHT}px` }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Clickable Area for creating blocks */}
-                  <div className="absolute inset-0 flex flex-col">
-                    {HOURS.map(hour => (
-                      <div 
-                        key={hour} 
-                        className="w-full cursor-crosshair"
-                        style={{ height: `${HOUR_HEIGHT}px` }}
-                        onClick={(e) => handleGridClick(day, hour, e)}
-                      />
-                    ))}
-                  </div>
+                <div key={dayStr} className="flex-1 relative border-r border-foreground/20 min-w-0" style={{ height: `${24 * HOUR_HEIGHT}px` }}>
+                  {/* Grid Lines and Clickable Area */}
+                  {HOURS.map(hour => (
+                    <div 
+                      key={hour} 
+                      className="absolute w-full border-t border-foreground/10 border-dashed cursor-crosshair"
+                      style={{ top: `${hour * HOUR_HEIGHT}px`, height: `${HOUR_HEIGHT}px` }}
+                      onClick={(e) => handleGridClick(day, hour, e)}
+                    />
+                  ))}
 
                   {/* Render Blocks */}
                   {dayBlocks.map(block => (
