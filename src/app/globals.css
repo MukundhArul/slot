@@ -16,6 +16,38 @@
   --color-green: #33cc33;
 }
 
+[data-theme="DARK_AMBER"] {
+  --background: #111111;
+  --foreground: #ffaa00;
+  --surface: #222222;
+  --surface-raised: #333333;
+  --color-amber: #ff8800;
+  --color-amber-light: #ffa238;
+  --color-red: #ff3300;
+  --color-blue: #4466cc;
+  --color-teal: #6DC3BB;
+  --color-pink: #B53082;
+  --color-orange: #F2963A;
+  --color-purple: #8c5cdb;
+  --color-green: #33cc33;
+}
+
+[data-theme="GREEN_CRT"] {
+  --background: #001100;
+  --foreground: #33ff33;
+  --surface: #002200;
+  --surface-raised: #003300;
+  --color-amber: #ffaa00;
+  --color-amber-light: #ffcc00;
+  --color-red: #ff3333;
+  --color-blue: #4466cc;
+  --color-teal: #6DC3BB;
+  --color-pink: #ff66cc;
+  --color-orange: #F2963A;
+  --color-purple: #aa66ff;
+  --color-green: #00ff00;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

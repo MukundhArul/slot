@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export default function Sidebar() {
-  const { currentDate, setCurrentDate, appMode, setAppMode } = useCalendarStore();
+  const { currentDate, setCurrentDate, appMode, setAppMode, theme, setTheme, mobileMenuOpen, setMobileMenuOpen } = useCalendarStore();
   const [calendarDate, setCalendarDate] = useState(currentDate);
 
   // Calculate grid for mini calendar
@@ -31,8 +31,15 @@ export default function Sidebar() {
   const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   return (
-    <aside className="w-64 border-r border-foreground bg-surface flex flex-col flex-shrink-0">
-      {/* Logo Area */}
+    <>
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 md:hidden" 
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+      <aside className={`w-64 border-r border-foreground bg-surface flex flex-col flex-shrink-0 absolute md:relative z-40 h-full transition-transform ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+        {/* Logo Area */}
       <div className="h-20 border-b border-foreground flex items-center gap-4 px-6 bg-surface-raised">
         <Image src="/logo.svg" alt="SLOT Logo" width={40} height={40} className="invert dark:invert-0" />
         <h1 className="text-2xl font-bold tracking-widest text-foreground">SLOT</h1>
@@ -93,6 +100,17 @@ export default function Sidebar() {
           })}
         </div>
       </div>
+
+      {/* Themes */}
+      <div className="p-4 border-t border-foreground/20">
+        <h3 className="text-xs font-bold text-foreground/50 mb-2">THEME</h3>
+        <div className="flex flex-col gap-1">
+          <button onClick={() => setTheme('PAPER')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'PAPER' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ PAPER ]</button>
+          <button onClick={() => setTheme('DARK_AMBER')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'DARK_AMBER' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ DARK AMBER ]</button>
+          <button onClick={() => setTheme('GREEN_CRT')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'GREEN_CRT' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ GREEN CRT ]</button>
+        </div>
+      </div>
     </aside>
+    </>
   );
 }

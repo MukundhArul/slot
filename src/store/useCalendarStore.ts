@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { addDays, startOfWeek } from 'date-fns';
 
+export type Theme = 'PAPER' | 'DARK_AMBER' | 'GREEN_CRT';
+
 export type TimeBlock = {
   id: string;
   title: string;
@@ -19,6 +21,8 @@ interface CalendarState {
   viewMode: 'DAY' | 'WEEK';
   selectedBlockId: string | null;
   appMode: 'PLANNER' | 'TIMER';
+  theme: Theme;
+  mobileMenuOpen: boolean;
 
   addBlock: (block: Omit<TimeBlock, 'id'>) => void;
   updateBlock: (id: string, updates: Partial<TimeBlock>) => void;
@@ -28,6 +32,8 @@ interface CalendarState {
   setViewMode: (mode: 'DAY' | 'WEEK') => void;
   setSelectedBlockId: (id: string | null) => void;
   setAppMode: (mode: 'PLANNER' | 'TIMER') => void;
+  setTheme: (theme: Theme) => void;
+  setMobileMenuOpen: (open: boolean) => void;
 
   navigatePrevious: () => void;
   navigateNext: () => void;
@@ -43,6 +49,8 @@ export const useCalendarStore = create<CalendarState>()(
       viewMode: 'WEEK',
       selectedBlockId: null,
       appMode: 'PLANNER',
+      theme: 'PAPER',
+      mobileMenuOpen: false,
 
       addBlock: (block) => {
         const id = Math.random().toString(36).substring(2, 9);
@@ -65,6 +73,8 @@ export const useCalendarStore = create<CalendarState>()(
       setViewMode: (mode) => set({ viewMode: mode }),
       setSelectedBlockId: (id) => set({ selectedBlockId: id }),
       setAppMode: (mode) => set({ appMode: mode }),
+      setTheme: (theme) => set({ theme }),
+      setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
 
       navigatePrevious: () => set((state) => ({
         currentDate: addDays(state.currentDate, state.viewMode === 'DAY' ? -1 : -7)
@@ -91,7 +101,7 @@ export const useCalendarStore = create<CalendarState>()(
     }),
     {
       name: 'slot-storage',
-      partialize: (state) => ({ blocks: state.blocks }), // only persist blocks
+      partialize: (state) => ({ blocks: state.blocks, theme: state.theme }),
     }
   )
 );

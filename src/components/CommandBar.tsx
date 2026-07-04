@@ -5,7 +5,7 @@ import { format, addDays } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 export default function CommandBar() {
-  const { currentDate, viewMode, setViewMode, navigatePrevious, navigateNext, addBlock, duplicateDay } = useCalendarStore();
+  const { currentDate, viewMode, setViewMode, navigatePrevious, navigateNext, addBlock, duplicateDay, setMobileMenuOpen } = useCalendarStore();
   const [timeStr, setTimeStr] = useState('');
   
   const [showDupModal, setShowDupModal] = useState(false);
@@ -29,15 +29,22 @@ export default function CommandBar() {
 
   return (
     <>
-      <header className="flex h-20 items-center justify-between border-b border-foreground px-6 bg-surface-raised uppercase text-sm font-bold">
-      <div className="flex items-center gap-6">
-        <span className="text-color-amber">SYS.TIME {timeStr || '--:--:--'}</span>
-        <span>
+      <header className="flex h-auto min-h-20 py-4 items-center justify-between border-b border-foreground px-4 md:px-6 bg-surface-raised uppercase text-sm font-bold flex-wrap gap-4">
+      <div className="flex items-center gap-4 w-full md:w-auto">
+        <button 
+          onClick={() => setMobileMenuOpen(true)} 
+          className="md:hidden flex items-center justify-center p-1 border border-foreground/50 text-foreground hover:bg-foreground hover:text-background transition-colors"
+          title="Menu"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <span className="text-color-amber whitespace-nowrap">SYS.TIME {timeStr || '--:--:--'}</span>
+        <span className="whitespace-nowrap">
           DATE: {format(currentDate, 'yyyy.MM.dd')}
         </span>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         <button 
           onClick={navigatePrevious}
           className="hover:text-color-amber hover:bg-foreground/10 px-2 py-1 transition-colors"
@@ -52,7 +59,7 @@ export default function CommandBar() {
         </button>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
         <button
           onClick={() => setShowDupModal(true)}
           className="text-color-amber border border-color-amber/50 px-3 py-1 font-bold hover:bg-color-amber/10 transition-colors"

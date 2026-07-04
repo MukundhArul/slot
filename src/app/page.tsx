@@ -6,9 +6,14 @@ import CalendarGrid from '@/components/CalendarGrid';
 import FocusTimer from '@/components/FocusTimer';
 import TaskModal from '@/components/TaskModal';
 import { useCalendarStore } from '@/store/useCalendarStore';
+import { useEffect } from 'react';
 
 export default function Home() {
-  const { appMode } = useCalendarStore();
+  const { appMode, theme } = useCalendarStore();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   return (
     <main className="flex flex-row h-screen w-full overflow-hidden bg-background text-foreground">
