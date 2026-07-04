@@ -61,7 +61,7 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
         borderStyle: 'solid',
         opacity: isDragging ? 0.8 : 1,
       }}
-      className={`flex flex-col overflow-hidden text-xs shadow-sm hover:z-20 transition-opacity relative group ${block.completed ? 'opacity-60 grayscale' : ''}`}
+      className="flex flex-col overflow-hidden text-xs shadow-sm hover:z-20 transition-opacity relative group"
     >
       <div className="absolute top-1 right-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
         <button 
@@ -94,8 +94,11 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
         {...attributes}
         {...listeners}
       >
-        <div className={`font-bold border-b border-foreground/20 pb-1 mb-1 pr-14 truncate text-black ${block.completed ? 'line-through' : ''}`}>{block.title}</div>
-        {block.duration >= 30 && <div className={`text-black/80 line-clamp-2 ${block.completed ? 'line-through' : ''}`}>{block.description}</div>}
+        <div className="font-bold border-b border-foreground/20 pb-1 mb-1 pr-14 truncate text-black flex items-center gap-2">
+          {block.title}
+          {block.completed && <span className="w-2 h-2 rounded-full bg-[#cc2200] shrink-0" title="Completed" />}
+        </div>
+        {block.duration >= 30 && <div className="text-black/80 line-clamp-2">{block.description}</div>}
       </div>
 
       <div

@@ -23,7 +23,7 @@ export default function CalendarGrid() {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // minimum drag distance before activating to avoid conflicting with clicks
+        distance: 1, // reduced from 5 for snappier dragging
       },
     })
   );
