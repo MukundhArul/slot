@@ -63,25 +63,6 @@ export default function CalendarGrid() {
     updateBlock(id, { duration: newDuration });
   };
 
-  const handleGridClick = (day: Date, hour: number, e: React.MouseEvent) => {
-    if (e.target !== e.currentTarget) return; // ignore clicks on blocks
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const y = e.clientY - rect.top;
-    const minutes = snapToGrid(((y - GRID_OFFSET) / HOUR_HEIGHT) * 60 + hour * 60);
-
-    const newBlock = {
-      title: 'NEW TASK',
-      description: '',
-      color: 'var(--color-green)', // default
-      date: format(day, 'yyyy-MM-dd'),
-      startTime: minutesToTime(minutes),
-      duration: 60,
-    };
-
-    // Add and select
-    addBlock(newBlock);
-  };
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd} collisionDetection={pointerWithin}>
@@ -125,9 +106,8 @@ export default function CalendarGrid() {
                     {HOURS.map(hour => (
                       <div
                         key={hour}
-                        className="absolute w-full border-t border-foreground/10 border-dashed cursor-crosshair"
+                        className="absolute w-full border-t border-foreground/10 border-dashed"
                         style={{ top: `${hour * HOUR_HEIGHT + GRID_OFFSET}px`, height: `${HOUR_HEIGHT}px` }}
-                        onClick={(e) => handleGridClick(day, hour, e)}
                       />
                     ))}
 

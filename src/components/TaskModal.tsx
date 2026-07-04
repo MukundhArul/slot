@@ -11,6 +11,7 @@ export default function TaskModal() {
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [color, setColor] = useState('');
@@ -19,6 +20,7 @@ export default function TaskModal() {
     if (block) {
       setTitle(block.title);
       setDescription(block.description);
+      setDate(block.date);
       setStartTime(block.startTime);
       const startMins = timeToMinutes(block.startTime);
       setEndTime(minutesToTime(startMins + block.duration));
@@ -36,7 +38,7 @@ export default function TaskModal() {
     }
     const duration = endMins - startMins;
 
-    updateBlock(block.id, { title, description, startTime, duration, color });
+    updateBlock(block.id, { title, description, date, startTime, duration, color });
     setSelectedBlockId(null);
   };
 
@@ -65,23 +67,32 @@ export default function TaskModal() {
             />
           </div>
 
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="block text-xs text-foreground/70 mb-1">FROM</label>
-              <input
-                type="time"
-                className="w-full bg-background border border-foreground/50 p-2 text-foreground focus:outline-none focus:border-color-green transition-colors"
-                value={startTime}
-                onChange={e => setStartTime(e.target.value)}
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs text-foreground/70 mb-1">DATE</label>
+              <input 
+                type="date" 
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                className="w-full bg-surface border border-foreground/50 px-2 py-1 outline-none focus:border-color-green font-mono"
               />
             </div>
-            <div className="flex-1">
+            <div>
+              <label className="block text-xs text-foreground/70 mb-1">FROM</label>
+              <input 
+                type="time" 
+                value={startTime}
+                onChange={e => setStartTime(e.target.value)}
+                className="w-full bg-surface border border-foreground/50 px-2 py-1 outline-none focus:border-color-green font-mono"
+              />
+            </div>
+            <div>
               <label className="block text-xs text-foreground/70 mb-1">TO</label>
-              <input
-                type="time"
-                className="w-full bg-background border border-foreground/50 p-2 text-foreground focus:outline-none focus:border-color-green transition-colors"
+              <input 
+                type="time" 
                 value={endTime}
                 onChange={e => setEndTime(e.target.value)}
+                className="w-full bg-surface border border-foreground/50 px-2 py-1 outline-none focus:border-color-green font-mono"
               />
             </div>
           </div>

@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 export default function CommandBar() {
-  const { currentDate, viewMode, setViewMode, navigatePrevious, navigateNext } = useCalendarStore();
+  const { currentDate, viewMode, setViewMode, navigatePrevious, navigateNext, addBlock } = useCalendarStore();
   const [timeStr, setTimeStr] = useState('');
 
   useEffect(() => {
@@ -40,6 +40,21 @@ export default function CommandBar() {
       </div>
 
       <div className="flex items-center gap-4">
+        <button 
+          onClick={() => {
+            addBlock({
+              title: 'NEW TASK',
+              description: '',
+              color: 'var(--color-green)',
+              date: format(currentDate, 'yyyy-MM-dd'),
+              startTime: '12:00',
+              duration: 60,
+            });
+          }}
+          className="bg-color-green text-[#050505] px-3 py-1 font-bold hover:scale-105 transition-transform"
+        >
+          [ + ADD TASK ]
+        </button>
         <button 
           onClick={() => setViewMode('DAY')}
           className={`px-2 py-1 transition-colors ${viewMode === 'DAY' ? 'text-color-green' : 'hover:text-color-amber'}`}

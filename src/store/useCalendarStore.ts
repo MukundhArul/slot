@@ -42,9 +42,13 @@ export const useCalendarStore = create<CalendarState>()(
       selectedBlockId: null,
       appMode: 'PLANNER',
 
-      addBlock: (block) => set((state) => ({
-        blocks: [...state.blocks, { ...block, id: Math.random().toString(36).substring(2, 9) }],
-      })),
+      addBlock: (block) => {
+        const id = Math.random().toString(36).substring(2, 9);
+        set((state) => ({
+          blocks: [...state.blocks, { ...block, id }],
+          selectedBlockId: id,
+        }));
+      },
 
       updateBlock: (id, updates) => set((state) => ({
         blocks: state.blocks.map(b => b.id === id ? { ...b, ...updates } : b),
