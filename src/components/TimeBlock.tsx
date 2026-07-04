@@ -2,7 +2,7 @@
 
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { TimeBlock as TimeBlockType } from '@/store/useCalendarStore';
+import { TimeBlock as TimeBlockType, useCalendarStore } from '@/store/useCalendarStore';
 import { HOUR_HEIGHT, MINUTE_HEIGHT } from '@/lib/constants';
 import { timeToMinutes, snapToGrid } from '@/lib/utils';
 
@@ -14,6 +14,7 @@ interface TimeBlockProps {
 }
 
 export default function TimeBlock({ block, onClick, onResize, timeOffset }: TimeBlockProps) {
+  const updateBlock = useCalendarStore(state => state.updateBlock);
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: block.id,
     data: { block },
@@ -60,9 +61,21 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
         borderStyle: 'solid',
         opacity: isDragging ? 0.8 : 1,
       }}
-      className="flex flex-col overflow-hidden text-xs shadow-sm hover:z-20 transition-opacity relative group"
+      className={`flex flex-col overflow-hidden text-xs shadow-sm hover:z-20 transition-opacity relative group ${block.completed ? 'opacity-60 grayscale' : ''}`}
     >
-      <div className="absolute top-1 right-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-1 right-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isDragging) {
+              updateBlock(block.id, { completed: !block.completed });
+            }
+          }}
+          className="bg-background text-foreground border border-foreground/50 px-1 text-[10px] hover:bg-color-green hover:text-background transition-colors font-bold"
+          title="Toggle Completion"
+        >
+          {block.completed ? '[ ↺ ]' : '[ ✓ ]'}
+        </button>
         <button 
           onClick={(e) => {
             e.stopPropagation();
@@ -71,8 +84,9 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
             }
           }}
           className="bg-background text-foreground border border-foreground/50 px-1 text-[10px] hover:bg-foreground hover:text-background transition-colors font-bold"
+          title="Edit Task"
         >
-          [E]
+          [ E ]
         </button>
       </div>
       <div 
@@ -80,8 +94,8 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
         {...attributes}
         {...listeners}
       >
-        <div className="font-bold border-b border-foreground/20 pb-1 mb-1 pr-6 truncate text-black">{block.title}</div>
-        {block.duration >= 30 && <div className="text-black/80 line-clamp-2">{block.description}</div>}
+        <div className={`font-bold border-b border-foreground/20 pb-1 mb-1 pr-14 truncate text-black ${block.completed ? 'line-through' : ''}`}>{block.title}</div>
+        {block.duration >= 30 && <div className={`text-black/80 line-clamp-2 ${block.completed ? 'line-through' : ''}`}>{block.description}</div>}
       </div>
 
       <div

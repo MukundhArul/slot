@@ -46,7 +46,7 @@ export default function TaskModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-      <div 
+      <div
         className="w-[400px] border border-color-green bg-surface-raised shadow-lg shadow-color-green/20"
       >
         <div className="bg-color-green text-[#050505] px-4 py-2 font-bold uppercase flex justify-between">
@@ -57,7 +57,7 @@ export default function TaskModal() {
         <div className="p-6 flex flex-col gap-4">
           <div>
             <label className="block text-xs text-foreground/70 mb-1">TITLE</label>
-            <input 
+            <input
               className="w-full bg-background border border-foreground/50 p-2 text-foreground focus:outline-none focus:border-color-green transition-colors"
               value={title}
               onChange={e => setTitle(e.target.value)}
@@ -68,7 +68,7 @@ export default function TaskModal() {
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="block text-xs text-foreground/70 mb-1">FROM</label>
-              <input 
+              <input
                 type="time"
                 className="w-full bg-background border border-foreground/50 p-2 text-foreground focus:outline-none focus:border-color-green transition-colors"
                 value={startTime}
@@ -77,7 +77,7 @@ export default function TaskModal() {
             </div>
             <div className="flex-1">
               <label className="block text-xs text-foreground/70 mb-1">TO</label>
-              <input 
+              <input
                 type="time"
                 className="w-full bg-background border border-foreground/50 p-2 text-foreground focus:outline-none focus:border-color-green transition-colors"
                 value={endTime}
@@ -88,7 +88,7 @@ export default function TaskModal() {
 
           <div>
             <label className="block text-xs text-foreground/70 mb-1">DESCRIPTION</label>
-            <textarea 
+            <textarea
               className="w-full bg-background border border-foreground/50 p-2 text-foreground focus:outline-none focus:border-color-green transition-colors resize-none h-24"
               value={description}
               onChange={e => setDescription(e.target.value)}
@@ -112,13 +112,13 @@ export default function TaskModal() {
           </div>
 
           <div className="flex justify-end gap-4 mt-4 pt-4 border-t border-foreground/20 text-sm">
-            <button 
+            <button
               onClick={handleDelete}
               className="text-color-red hover:bg-color-red/10 px-2 py-1 transition-colors"
             >
               [ DELETE ]
             </button>
-            <button 
+            <button
               onClick={handleUpdate}
               className="text-color-green hover:bg-color-green/10 px-2 py-1 font-bold transition-colors"
             >
