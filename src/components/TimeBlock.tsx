@@ -71,7 +71,7 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
               updateBlock(block.id, { completed: !block.completed });
             }
           }}
-          className="bg-background text-foreground border border-foreground/50 px-1 text-[10px] hover:bg-color-green hover:text-background transition-colors font-bold"
+          className="bg-background text-foreground border border-foreground/50 px-1 text-[10px] hover:bg-foreground hover:text-background transition-colors font-bold"
           title="Toggle Completion"
         >
           {block.completed ? '[ ↺ ]' : '[ ✓ ]'}
