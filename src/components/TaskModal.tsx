@@ -70,8 +70,8 @@ export default function TaskModal() {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-xs text-foreground/70 mb-1">DATE</label>
-              <input 
-                type="date" 
+              <input
+                type="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
                 className="w-full bg-surface border border-foreground/50 px-2 py-1 outline-none focus:border-color-green font-mono"
@@ -79,8 +79,8 @@ export default function TaskModal() {
             </div>
             <div>
               <label className="block text-xs text-foreground/70 mb-1">FROM</label>
-              <input 
-                type="time" 
+              <input
+                type="time"
                 value={startTime}
                 onChange={e => setStartTime(e.target.value)}
                 className="w-full bg-surface border border-foreground/50 px-2 py-1 outline-none focus:border-color-green font-mono"
@@ -88,8 +88,8 @@ export default function TaskModal() {
             </div>
             <div>
               <label className="block text-xs text-foreground/70 mb-1">TO</label>
-              <input 
-                type="time" 
+              <input
+                type="time"
                 value={endTime}
                 onChange={e => setEndTime(e.target.value)}
                 className="w-full bg-surface border border-foreground/50 px-2 py-1 outline-none focus:border-color-green font-mono"

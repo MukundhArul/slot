@@ -31,6 +31,8 @@ interface CalendarState {
 
   navigatePrevious: () => void;
   navigateNext: () => void;
+
+  duplicateDay: (sourceDate: string, targetDate: string) => void;
 }
 
 export const useCalendarStore = create<CalendarState>()(
@@ -70,6 +72,22 @@ export const useCalendarStore = create<CalendarState>()(
       navigateNext: () => set((state) => ({
         currentDate: addDays(state.currentDate, state.viewMode === 'DAY' ? 1 : 7)
       })),
+
+      duplicateDay: (sourceDate: string, targetDate: string) => set((state) => {
+        const sourceBlocks = state.blocks.filter(b => b.date === sourceDate);
+        if (sourceBlocks.length === 0) return state; // nothing to copy
+        
+        const duplicatedBlocks = sourceBlocks.map(b => ({
+          ...b,
+          id: Math.random().toString(36).substring(2, 9),
+          date: targetDate,
+          completed: false, // reset completion for new tasks
+        }));
+        
+        return {
+          blocks: [...state.blocks, ...duplicatedBlocks]
+        };
+      }),
     }),
     {
       name: 'slot-storage',
