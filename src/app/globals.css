@@ -32,20 +32,20 @@
   --color-green: #33cc33;
 }
 
-[data-theme="GREEN_CRT"] {
-  --background: #001100;
-  --foreground: #33ff33;
-  --surface: #002200;
-  --surface-raised: #003300;
-  --color-amber: #ffaa00;
-  --color-amber-light: #ffcc00;
-  --color-red: #ff3333;
-  --color-blue: #4466cc;
-  --color-teal: #6DC3BB;
-  --color-pink: #ff66cc;
-  --color-orange: #F2963A;
-  --color-purple: #aa66ff;
-  --color-green: #00ff00;
+[data-theme="E_INK"] {
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --surface: #f0f0f0;
+  --surface-raised: #e0e0e0;
+  --color-amber: #555555;
+  --color-amber-light: #777777;
+  --color-red: #333333;
+  --color-blue: #444444;
+  --color-teal: #666666;
+  --color-pink: #888888;
+  --color-orange: #555555;
+  --color-purple: #444444;
+  --color-green: #222222;
 }
 
 @theme inline {

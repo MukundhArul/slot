@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { addDays, startOfWeek } from 'date-fns';
 
-export type Theme = 'PAPER' | 'DARK_AMBER' | 'GREEN_CRT';
+export type Theme = 'PAPER' | 'DARK_AMBER' | 'E_INK';
 
 export type TimeBlock = {
   id: string;

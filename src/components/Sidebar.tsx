@@ -107,7 +107,7 @@ export default function Sidebar() {
         <div className="flex flex-col gap-1">
           <button onClick={() => setTheme('PAPER')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'PAPER' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ PAPER ]</button>
           <button onClick={() => setTheme('DARK_AMBER')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'DARK_AMBER' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ DARK AMBER ]</button>
-          <button onClick={() => setTheme('GREEN_CRT')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'GREEN_CRT' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ GREEN CRT ]</button>
+          <button onClick={() => setTheme('E_INK')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'E_INK' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ E-INK ]</button>
         </div>
       </div>
     </aside>
