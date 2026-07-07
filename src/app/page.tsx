@@ -5,6 +5,7 @@ import CommandBar from '@/components/CommandBar';
 import CalendarGrid from '@/components/CalendarGrid';
 import FocusTimer from '@/components/FocusTimer';
 import TaskModal from '@/components/TaskModal';
+import StatsDashboard from '@/components/StatsDashboard';
 import { useCalendarStore } from '@/store/useCalendarStore';
 import { useEffect } from 'react';
 
@@ -20,7 +21,9 @@ export default function Home() {
       <Sidebar />
       <div className="flex flex-col flex-1 h-full min-w-0">
         <CommandBar />
-        {appMode === 'PLANNER' ? <CalendarGrid /> : <FocusTimer />}
+        {appMode === 'PLANNER' && <CalendarGrid />}
+        {appMode === 'TIMER' && <FocusTimer />}
+        {appMode === 'STATS' && <StatsDashboard />}
       </div>
       <TaskModal />
     </main>

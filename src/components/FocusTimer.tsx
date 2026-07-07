@@ -1,8 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { playTerminalBeep, sendDesktopNotification } from '@/lib/notifications';
+import { useCalendarStore } from '@/store/useCalendarStore';
 
 export default function FocusTimer() {
+  const { addFocusMinutes } = useCalendarStore();
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState<'FOCUS' | 'BREAK'>('FOCUS');
@@ -14,12 +17,20 @@ export default function FocusTimer() {
       interval = setInterval(() => {
         setTimeLeft((time) => time - 1);
       }, 1000);
-    } else if (timeLeft === 0) {
+    } else if (isActive && timeLeft === 0) {
       setIsActive(false);
+      
       // Timer finished!
+      playTerminalBeep();
+      if (mode === 'FOCUS') {
+        sendDesktopNotification('FOCUS COMPLETE', `You logged ${focusDuration} minutes of deep work! Time for a break.`);
+        addFocusMinutes(focusDuration);
+      } else {
+        sendDesktopNotification('BREAK COMPLETE', 'Break time is over. Ready to focus?');
+      }
     }
     return () => clearInterval(interval);
-  }, [isActive, timeLeft]);
+  }, [isActive, timeLeft, mode, focusDuration, addFocusMinutes]);
 
   const toggleTimer = () => setIsActive(!isActive);
 

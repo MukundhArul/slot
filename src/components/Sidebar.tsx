@@ -59,6 +59,12 @@ export default function Sidebar() {
         >
           {appMode === 'TIMER' ? '[ FOCUS TIMER ]' : 'FOCUS TIMER'}
         </button>
+        <button 
+          onClick={() => setAppMode('STATS')}
+          className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'STATS' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-color-amber border-transparent hover:border-foreground/20'}`}
+        >
+          {appMode === 'STATS' ? '[ STATISTICS ]' : 'STATISTICS'}
+        </button>
       </nav>
 
       {/* Mini Calendar */}

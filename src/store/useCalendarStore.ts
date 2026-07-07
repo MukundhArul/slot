@@ -20,9 +20,10 @@ interface CalendarState {
   currentDate: Date;
   viewMode: 'DAY' | 'WEEK';
   selectedBlockId: string | null;
-  appMode: 'PLANNER' | 'TIMER';
+  appMode: 'PLANNER' | 'TIMER' | 'STATS';
   theme: Theme;
   mobileMenuOpen: boolean;
+  focusMinutesLogged: number;
 
   addBlock: (block: Omit<TimeBlock, 'id'>) => void;
   updateBlock: (id: string, updates: Partial<TimeBlock>) => void;
@@ -31,9 +32,10 @@ interface CalendarState {
   setCurrentDate: (date: Date) => void;
   setViewMode: (mode: 'DAY' | 'WEEK') => void;
   setSelectedBlockId: (id: string | null) => void;
-  setAppMode: (mode: 'PLANNER' | 'TIMER') => void;
+  setAppMode: (mode: 'PLANNER' | 'TIMER' | 'STATS') => void;
   setTheme: (theme: Theme) => void;
   setMobileMenuOpen: (open: boolean) => void;
+  addFocusMinutes: (mins: number) => void;
 
   navigatePrevious: () => void;
   navigateNext: () => void;
@@ -51,6 +53,7 @@ export const useCalendarStore = create<CalendarState>()(
       appMode: 'PLANNER',
       theme: 'PAPER',
       mobileMenuOpen: false,
+      focusMinutesLogged: 0,
 
       addBlock: (block) => {
         const id = Math.random().toString(36).substring(2, 9);
@@ -75,6 +78,7 @@ export const useCalendarStore = create<CalendarState>()(
       setAppMode: (mode) => set({ appMode: mode }),
       setTheme: (theme) => set({ theme }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
+      addFocusMinutes: (mins) => set((state) => ({ focusMinutesLogged: state.focusMinutesLogged + mins })),
 
       navigatePrevious: () => set((state) => ({
         currentDate: addDays(state.currentDate, state.viewMode === 'DAY' ? -1 : -7)
@@ -101,7 +105,11 @@ export const useCalendarStore = create<CalendarState>()(
     }),
     {
       name: 'slot-storage',
-      partialize: (state) => ({ blocks: state.blocks, theme: state.theme }),
+      partialize: (state) => ({ 
+        blocks: state.blocks, 
+        theme: state.theme,
+        focusMinutesLogged: state.focusMinutesLogged 
+      }),
     }
   )
 );
