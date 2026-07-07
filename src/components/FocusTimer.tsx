@@ -6,6 +6,7 @@ export default function FocusTimer() {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState<'FOCUS' | 'BREAK'>('FOCUS');
+  const [focusDuration, setFocusDuration] = useState(25); // in minutes
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -24,20 +25,28 @@ export default function FocusTimer() {
 
   const resetTimer = () => {
     setIsActive(false);
-    setTimeLeft(mode === 'FOCUS' ? 25 * 60 : 5 * 60);
+    setTimeLeft(mode === 'FOCUS' ? focusDuration * 60 : 5 * 60);
   };
 
   const switchMode = (newMode: 'FOCUS' | 'BREAK') => {
     setMode(newMode);
     setIsActive(false);
-    setTimeLeft(newMode === 'FOCUS' ? 25 * 60 : 5 * 60);
+    setTimeLeft(newMode === 'FOCUS' ? focusDuration * 60 : 5 * 60);
+  };
+
+  const changeFocusDuration = (mins: number) => {
+    setFocusDuration(mins);
+    if (mode === 'FOCUS') {
+      setIsActive(false);
+      setTimeLeft(mins * 60);
+    }
   };
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
   
   // Progress bar logic
-  const totalSeconds = mode === 'FOCUS' ? 25 * 60 : 5 * 60;
+  const totalSeconds = mode === 'FOCUS' ? focusDuration * 60 : 5 * 60;
   const progress = 1 - (timeLeft / totalSeconds);
   const barLength = 40;
   const filledBars = Math.floor(progress * barLength);
@@ -76,6 +85,26 @@ export default function FocusTimer() {
             {mode === 'BREAK' ? '[ BREAK ]' : 'BREAK'}
           </button>
         </div>
+
+        {/* Duration Selector for Focus Mode */}
+        {mode === 'FOCUS' && (
+          <div className="flex gap-4 text-xs font-bold tracking-widest">
+            {[
+              { label: '25M', value: 25 },
+              { label: '1H', value: 60 },
+              { label: '2H', value: 120 },
+              { label: '3H', value: 180 }
+            ].map(opt => (
+              <button
+                key={opt.value}
+                onClick={() => changeFocusDuration(opt.value)}
+                className={`px-3 py-1 transition-colors border ${focusDuration === opt.value ? 'bg-foreground text-background border-foreground' : 'border-transparent text-foreground/50 hover:text-foreground'}`}
+              >
+                {focusDuration === opt.value ? `[ ${opt.label} ]` : opt.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Countdown Display */}
         <div className="flex flex-col items-center">
