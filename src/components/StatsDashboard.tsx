@@ -1,6 +1,7 @@
 'use client';
 
 import { useCalendarStore } from '@/store/useCalendarStore';
+import { eachDayOfInterval, subDays, format } from 'date-fns';
 
 export default function StatsDashboard() {
   const { blocks, focusMinutesLogged } = useCalendarStore();
@@ -17,6 +18,13 @@ export default function StatsDashboard() {
   const filledBars = Math.floor((completionRate / 100) * barLength);
   const emptyBars = barLength - filledBars;
   const asciiBar = '[' + '█'.repeat(Math.max(0, filledBars)) + '·'.repeat(Math.max(0, emptyBars)) + ']';
+
+  // Heatmap logic
+  const today = new Date();
+  const heatmapDays = eachDayOfInterval({
+    start: subDays(today, 90),
+    end: today
+  });
 
   return (
     <div className="flex-1 overflow-auto bg-background p-8 relative flex flex-col items-center">
@@ -83,6 +91,34 @@ export default function StatsDashboard() {
           </div>
 
         </div>
+
+        {/* Heatmap Section */}
+        <div className="mt-8 border border-foreground/30 p-6 flex flex-col gap-4">
+          <h3 className="text-sm font-bold tracking-widest text-foreground/50 uppercase border-b border-foreground/10 pb-2">Productivity Heatmap (90 Days)</h3>
+          
+          <div className="overflow-x-auto pb-4">
+            <div className="grid grid-rows-7 grid-flow-col gap-1 w-max">
+              {heatmapDays.map((day) => {
+                const dayStr = format(day, 'yyyy-MM-dd');
+                const count = blocks.filter(b => b.completed && b.date === dayStr).length;
+                
+                let intensityClass = 'bg-surface border-foreground/10';
+                if (count === 1) intensityClass = 'bg-color-amber/30 border-color-amber/30';
+                if (count === 2) intensityClass = 'bg-color-amber/60 border-color-amber/60';
+                if (count >= 3) intensityClass = 'bg-color-amber border-color-amber shadow-[0_0_5px_var(--color-amber)]';
+
+                return (
+                  <div 
+                    key={dayStr}
+                    className={`w-3 h-3 border ${intensityClass}`}
+                    title={`${format(day, 'MMM dd, yyyy')}: ${count} tasks completed`}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
