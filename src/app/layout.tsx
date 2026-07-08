@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "SLOT",
   description: "Terminal-style time management",
   manifest: "/manifest.json",
+};
+
+export const viewport = {
   themeColor: "#000000",
 };
 
