@@ -23,13 +23,14 @@ export default function CommandLineInterface() {
     timerDuration,
     navigatePrevious,
     navigateNext,
-    setMobileMenuOpen
+    setMobileMenuOpen,
+    setCliOpen
   } = useCalendarStore();
 
   const [input, setInput] = useState('');
   const [logs, setLogs] = useState<LogEntry[]>([
     { text: 'SLOT TERMINAL SHELL V1.0.0', type: 'info' },
-    { text: "PRESS '/' KEY TO FOCUS. TYPE '/help'", type: 'info' }
+    { text: "PRESS '/' KEY TO FOCUS. TYPE '/help' FOR COMMANDS.", type: 'info' }
   ]);
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -51,6 +52,7 @@ export default function CommandLineInterface() {
         document.activeElement?.tagName !== 'TEXTAREA'
       ) {
         e.preventDefault();
+        setCliOpen(true);
         // open mobile sidebar if active on small screen
         if (window.innerWidth < 768) {
           setMobileMenuOpen(true);
@@ -62,7 +64,7 @@ export default function CommandLineInterface() {
     };
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [setMobileMenuOpen]);
+  }, [setMobileMenuOpen, setCliOpen]);
 
   // Helper: parse duration string (e.g. 1.5h, 45m, 60) to minutes
   const parseDuration = (str: string): number => {
@@ -107,6 +109,12 @@ export default function CommandLineInterface() {
       logOutput('  /view <day | week>', 'info');
       logOutput('  /next | /prev -> Navigate active date', 'info');
       logOutput('  /clear -> Clears tasks scheduled on active date', 'info');
+      logOutput('  /close | /exit -> Minimizes/closes the shell panel', 'info');
+      return;
+    }
+
+    if (mainCommand === '/close' || mainCommand === '/exit') {
+      setCliOpen(false);
       return;
     }
 
@@ -281,6 +289,10 @@ export default function CommandLineInterface() {
     if (e.key === 'Enter') {
       executeCommand(input);
       setInput('');
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      setCliOpen(false);
+      inputRef.current?.blur();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (cmdHistory.length === 0) return;
@@ -303,14 +315,23 @@ export default function CommandLineInterface() {
   };
 
   return (
-    <div className="p-4 border-t border-foreground/20 bg-background flex flex-col gap-2 font-mono h-48 select-none">
-      <div className="flex justify-between items-center text-[10px] text-foreground/40 font-bold uppercase tracking-widest border-b border-foreground/10 pb-1 flex-shrink-0">
-        <span>SLOT CLI SHELL</span>
-        <span>SYS: READY</span>
+    <div className="w-full p-4 border-t border-foreground bg-background flex flex-col gap-2 font-mono h-52 md:h-56 select-none flex-shrink-0 z-20">
+      <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest border-b border-foreground/15 pb-1.5 flex-shrink-0">
+        <div className="flex items-center gap-4">
+          <span className="text-color-amber">SLOT SHELL</span>
+          <span className="text-foreground/40 font-light">SYS: READY</span>
+        </div>
+        <button 
+          onClick={() => setCliOpen(false)}
+          className="text-foreground/40 hover:text-color-red transition-colors font-bold cursor-pointer"
+          title="Minimize Shell"
+        >
+          [ COLLAPSE ]
+        </button>
       </div>
 
       {/* Log list output */}
-      <div className="flex-1 overflow-y-auto text-[11px] leading-tight flex flex-col gap-1 pr-1 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto text-[11px] leading-relaxed flex flex-col gap-1 pr-1 custom-scrollbar">
         {logs.map((log, idx) => {
           let colorClass = 'text-foreground/70';
           if (log.type === 'success') colorClass = 'text-color-green font-bold';
@@ -327,7 +348,7 @@ export default function CommandLineInterface() {
       </div>
 
       {/* CLI Input */}
-      <div className="flex items-center gap-2 border border-foreground/20 px-2 py-1 flex-shrink-0 bg-surface">
+      <div className="flex items-center gap-2 border border-foreground/20 px-3 py-1.5 flex-shrink-0 bg-surface">
         <span className="text-color-amber text-xs font-bold font-mono">$</span>
         <input
           ref={inputRef}
@@ -335,8 +356,8 @@ export default function CommandLineInterface() {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="TYPE A COMMAND..."
-          className="flex-1 bg-transparent text-xs text-foreground focus:outline-none placeholder-foreground/20 font-bold font-mono"
+          placeholder="TYPE A COMMAND... (ESC TO COLLAPSE, /HELP FOR LIST)"
+          className="flex-1 bg-transparent text-xs text-foreground focus:outline-none placeholder-foreground/25 font-bold font-mono"
           maxLength={100}
         />
       </div>

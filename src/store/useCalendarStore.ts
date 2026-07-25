@@ -47,6 +47,9 @@ interface CalendarState {
   timerMode: 'FOCUS' | 'BREAK';
   timerDuration: number;
   setTimerState: (updates: Partial<{ timerTimeLeft: number; timerIsActive: boolean; timerMode: 'FOCUS' | 'BREAK'; timerDuration: number }>) => void;
+
+  cliOpen: boolean;
+  setCliOpen: (open: boolean) => void;
 }
 
 export const useCalendarStore = create<CalendarState>()(
@@ -66,6 +69,9 @@ export const useCalendarStore = create<CalendarState>()(
       timerMode: 'FOCUS',
       timerDuration: 25,
       setTimerState: (updates) => set((state) => ({ ...state, ...updates })),
+
+      cliOpen: true,
+      setCliOpen: (open) => set({ cliOpen: open }),
 
       addBlock: (block) => {
         const id = Math.random().toString(36).substring(2, 9);
@@ -122,7 +128,8 @@ export const useCalendarStore = create<CalendarState>()(
         theme: state.theme,
         focusMinutesLogged: state.focusMinutesLogged,
         timerDuration: state.timerDuration,
-        timerMode: state.timerMode
+        timerMode: state.timerMode,
+        cliOpen: state.cliOpen
       }),
     }
   )

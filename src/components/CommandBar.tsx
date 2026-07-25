@@ -5,7 +5,7 @@ import { format, addDays } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 export default function CommandBar() {
-  const { currentDate, viewMode, setViewMode, navigatePrevious, navigateNext, addBlock, duplicateDay, setMobileMenuOpen } = useCalendarStore();
+  const { currentDate, viewMode, setViewMode, navigatePrevious, navigateNext, addBlock, duplicateDay, setMobileMenuOpen, cliOpen, setCliOpen } = useCalendarStore();
   const [timeStr, setTimeStr] = useState('');
   
   const [showDupModal, setShowDupModal] = useState(false);
@@ -92,6 +92,13 @@ export default function CommandBar() {
           className={`px-2 py-1 transition-colors ${viewMode === 'WEEK' ? 'text-color-green' : 'hover:text-color-amber'}`}
         >
           {viewMode === 'WEEK' ? '[ WEEK ]' : 'WEEK'}
+        </button>
+        <span className="text-foreground/30 font-light">|</span>
+        <button 
+          onClick={() => setCliOpen(!cliOpen)}
+          className={`px-2 py-1 transition-colors ${cliOpen ? 'text-color-amber font-black' : 'hover:text-color-amber'}`}
+        >
+          {cliOpen ? '[ SHELL ]' : 'SHELL'}
         </button>
       </div>
       </header>

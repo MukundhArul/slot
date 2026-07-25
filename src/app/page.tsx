@@ -6,6 +6,7 @@ import CalendarGrid from '@/components/CalendarGrid';
 import FocusTimer from '@/components/FocusTimer';
 import TaskModal from '@/components/TaskModal';
 import StatsDashboard from '@/components/StatsDashboard';
+import CommandLineInterface from '@/components/CommandLineInterface';
 import { useCalendarStore } from '@/store/useCalendarStore';
 import { playTerminalBeep, sendDesktopNotification } from '@/lib/notifications';
 import { useEffect } from 'react';
@@ -19,7 +20,8 @@ export default function Home() {
     timerMode, 
     timerDuration, 
     setTimerState, 
-    addFocusMinutes 
+    addFocusMinutes,
+    cliOpen
   } = useCalendarStore();
 
   useEffect(() => {
@@ -52,9 +54,16 @@ export default function Home() {
       <Sidebar />
       <div className="flex flex-col flex-1 h-full min-w-0">
         <CommandBar />
-        {appMode === 'PLANNER' && <CalendarGrid />}
-        {appMode === 'TIMER' && <FocusTimer />}
-        {appMode === 'STATS' && <StatsDashboard />}
+        
+        {/* Scrollable View Area */}
+        <div className="flex-1 overflow-auto min-h-0 relative">
+          {appMode === 'PLANNER' && <CalendarGrid />}
+          {appMode === 'TIMER' && <FocusTimer />}
+          {appMode === 'STATS' && <StatsDashboard />}
+        </div>
+
+        {/* Collapsible Full-Width CLI Drawer */}
+        {cliOpen && <CommandLineInterface />}
       </div>
       <TaskModal />
     </main>

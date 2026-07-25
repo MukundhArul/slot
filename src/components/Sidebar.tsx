@@ -7,7 +7,6 @@ import {
 } from 'date-fns';
 import Image from 'next/image';
 import { useState } from 'react';
-import CommandLineInterface from './CommandLineInterface';
 
 export default function Sidebar() {
   const { currentDate, setCurrentDate, appMode, setAppMode, theme, setTheme, mobileMenuOpen, setMobileMenuOpen } = useCalendarStore();
@@ -121,9 +120,6 @@ export default function Sidebar() {
             </div>
           </div>
         </div>
-
-        {/* CLI Section */}
-        <CommandLineInterface />
 
       </aside>
     </>

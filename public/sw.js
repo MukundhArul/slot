@@ -29,9 +29,9 @@ self.addEventListener('fetch', event => {
 
         // Otherwise fetch from network and cache it dynamically
         return fetch(event.request).then(
-          function(response) {
+          function (response) {
             // Check if we received a valid response
-            if(!response || response.status !== 200 || response.type !== 'basic') {
+            if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
 
@@ -39,7 +39,7 @@ self.addEventListener('fetch', event => {
             var responseToCache = response.clone();
 
             caches.open(CACHE_NAME)
-              .then(function(cache) {
+              .then(function (cache) {
                 cache.put(event.request, responseToCache);
               });
 
