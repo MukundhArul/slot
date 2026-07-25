@@ -14,6 +14,7 @@ export default function CommandLineInterface() {
     currentDate,
     blocks,
     addBlock,
+    updateBlock,
     removeBlock,
     setAppMode,
     setViewMode,
@@ -24,13 +25,14 @@ export default function CommandLineInterface() {
     navigatePrevious,
     navigateNext,
     setMobileMenuOpen,
-    setCliOpen
+    setCliOpen,
+    controlMode
   } = useCalendarStore();
 
   const [input, setInput] = useState('');
   const [logs, setLogs] = useState<LogEntry[]>([
     { text: 'SLOT TERMINAL SHELL V1.0.0', type: 'info' },
-    { text: "PRESS '/' KEY TO FOCUS. TYPE '/help' FOR COMMANDS.", type: 'info' }
+    { text: controlMode === 'CLI' ? "TYPE '/help' FOR COMMANDS." : "PRESS '/' KEY TO FOCUS. TYPE '/help' FOR COMMANDS.", type: 'info' }
   ]);
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -52,7 +54,9 @@ export default function CommandLineInterface() {
         document.activeElement?.tagName !== 'TEXTAREA'
       ) {
         e.preventDefault();
-        setCliOpen(true);
+        if (controlMode !== 'CLI') {
+          setCliOpen(true);
+        }
         // open mobile sidebar if active on small screen
         if (window.innerWidth < 768) {
           setMobileMenuOpen(true);
@@ -64,7 +68,7 @@ export default function CommandLineInterface() {
     };
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [setMobileMenuOpen, setCliOpen]);
+  }, [setMobileMenuOpen, setCliOpen, controlMode]);
 
   // Helper: parse duration string (e.g. 1.5h, 45m, 60) to minutes
   const parseDuration = (str: string): number => {
@@ -101,6 +105,9 @@ export default function CommandLineInterface() {
     if (mainCommand === '/help') {
       logOutput('HELP - AVAILABLE COMMANDS:', 'info');
       logOutput('  /add "<title>" HH:MM [dur] -> Add task (e.g. 1.5h, 45m)', 'info');
+      logOutput('  /done "<title>" or /complete "<title>" -> Complete task', 'info');
+      logOutput('  /undone "<title>" or /uncomplete "<title>" -> Reactivate task', 'info');
+      logOutput('  /rm "<title>" or /remove "<title>" -> Remove task', 'info');
       logOutput('  /timer <start | pause | reset>', 'info');
       logOutput('  /timer <duration> -> Set duration (e.g. 25m, 1h)', 'info');
       logOutput('  /timer <focus | break> -> Toggle timer mode', 'info');
@@ -109,12 +116,18 @@ export default function CommandLineInterface() {
       logOutput('  /view <day | week>', 'info');
       logOutput('  /next | /prev -> Navigate active date', 'info');
       logOutput('  /clear -> Clears tasks scheduled on active date', 'info');
-      logOutput('  /close | /exit -> Minimizes/closes the shell panel', 'info');
+      if (controlMode !== 'CLI') {
+        logOutput('  /close | /exit -> Minimizes/closes the shell panel', 'info');
+      }
       return;
     }
 
     if (mainCommand === '/close' || mainCommand === '/exit') {
-      setCliOpen(false);
+      if (controlMode === 'CLI') {
+        logOutput('ERR: SHELL CANNOT BE CLOSED IN CLI CONTROL MODE', 'error');
+      } else {
+        setCliOpen(false);
+      }
       return;
     }
 
@@ -145,6 +158,63 @@ export default function CommandLineInterface() {
       });
 
       logOutput(`SUCCESS: ADDED "${title.toUpperCase()}" AT ${timeStr} FOR ${durStr}`, 'success');
+      return;
+    }
+
+    if (mainCommand === '/complete' || mainCommand === '/done') {
+      const regex = /^\/(?:complete|done)\s+"([^"]+)"$/i;
+      const match = trimmed.match(regex);
+      if (!match) {
+        logOutput('ERR: FORMAT MUST BE: /done "Title" or /complete "Title"', 'error');
+        return;
+      }
+      const title = match[1];
+      const dateStr = format(currentDate, 'yyyy-MM-dd');
+      const task = blocks.find(b => b.date === dateStr && b.title.toLowerCase() === title.toLowerCase());
+      if (!task) {
+        logOutput(`ERR: TASK NOT FOUND: "${title}" ON THIS DATE`, 'error');
+      } else {
+        updateBlock(task.id, { completed: true });
+        logOutput(`SUCCESS: TASK "${title.toUpperCase()}" COMPLETED`, 'success');
+      }
+      return;
+    }
+
+    if (mainCommand === '/uncomplete' || mainCommand === '/undone') {
+      const regex = /^\/(?:uncomplete|undone)\s+"([^"]+)"$/i;
+      const match = trimmed.match(regex);
+      if (!match) {
+        logOutput('ERR: FORMAT MUST BE: /undone "Title" or /uncomplete "Title"', 'error');
+        return;
+      }
+      const title = match[1];
+      const dateStr = format(currentDate, 'yyyy-MM-dd');
+      const task = blocks.find(b => b.date === dateStr && b.title.toLowerCase() === title.toLowerCase());
+      if (!task) {
+        logOutput(`ERR: TASK NOT FOUND: "${title}" ON THIS DATE`, 'error');
+      } else {
+        updateBlock(task.id, { completed: false });
+        logOutput(`SUCCESS: TASK "${title.toUpperCase()}" MARKED ACTIVE`, 'success');
+      }
+      return;
+    }
+
+    if (mainCommand === '/remove' || mainCommand === '/rm') {
+      const regex = /^\/(?:remove|rm)\s+"([^"]+)"$/i;
+      const match = trimmed.match(regex);
+      if (!match) {
+        logOutput('ERR: FORMAT MUST BE: /rm "Title" or /remove "Title"', 'error');
+        return;
+      }
+      const title = match[1];
+      const dateStr = format(currentDate, 'yyyy-MM-dd');
+      const task = blocks.find(b => b.date === dateStr && b.title.toLowerCase() === title.toLowerCase());
+      if (!task) {
+        logOutput(`ERR: TASK NOT FOUND: "${title}" ON THIS DATE`, 'error');
+      } else {
+        removeBlock(task.id);
+        logOutput(`SUCCESS: REMOVED TASK "${title.toUpperCase()}"`, 'success');
+      }
       return;
     }
 
@@ -291,7 +361,9 @@ export default function CommandLineInterface() {
       setInput('');
     } else if (e.key === 'Escape') {
       e.preventDefault();
-      setCliOpen(false);
+      if (controlMode !== 'CLI') {
+        setCliOpen(false);
+      }
       inputRef.current?.blur();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -319,15 +391,17 @@ export default function CommandLineInterface() {
       <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest border-b border-foreground/15 pb-1.5 flex-shrink-0">
         <div className="flex items-center gap-4">
           <span className="text-color-amber">SLOT SHELL</span>
-          <span className="text-foreground/40 font-light">SYS: READY</span>
+          <span className="text-foreground/40 font-light">SYS: READY ({controlMode} MODE)</span>
         </div>
-        <button 
-          onClick={() => setCliOpen(false)}
-          className="text-foreground/40 hover:text-color-red transition-colors font-bold cursor-pointer"
-          title="Minimize Shell"
-        >
-          [ COLLAPSE ]
-        </button>
+        {controlMode !== 'CLI' && (
+          <button 
+            onClick={() => setCliOpen(false)}
+            className="text-foreground/40 hover:text-color-red transition-colors font-bold cursor-pointer"
+            title="Minimize Shell"
+          >
+            [ COLLAPSE ]
+          </button>
+        )}
       </div>
 
       {/* Log list output */}
@@ -356,7 +430,7 @@ export default function CommandLineInterface() {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="TYPE A COMMAND... (ESC TO COLLAPSE, /HELP FOR LIST)"
+          placeholder={controlMode === 'CLI' ? "TYPE A COMMAND... (/HELP FOR LIST)" : "TYPE A COMMAND... (ESC TO COLLAPSE, /HELP FOR LIST)"}
           className="flex-1 bg-transparent text-xs text-foreground focus:outline-none placeholder-foreground/25 font-bold font-mono"
           maxLength={100}
         />

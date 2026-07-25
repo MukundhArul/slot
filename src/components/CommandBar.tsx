@@ -5,7 +5,7 @@ import { format, addDays } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 export default function CommandBar() {
-  const { currentDate, viewMode, setViewMode, navigatePrevious, navigateNext, addBlock, duplicateDay, setMobileMenuOpen, cliOpen, setCliOpen } = useCalendarStore();
+  const { currentDate, viewMode, setViewMode, navigatePrevious, navigateNext, addBlock, duplicateDay, setMobileMenuOpen, controlMode } = useCalendarStore();
   const [timeStr, setTimeStr] = useState('');
   
   const [showDupModal, setShowDupModal] = useState(false);
@@ -60,46 +60,43 @@ export default function CommandBar() {
       </div>
 
       <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-        <button
-          onClick={() => setShowDupModal(true)}
-          className="text-color-amber border border-color-amber/50 px-3 py-1 font-bold hover:bg-color-amber/10 transition-colors"
-        >
-          [ DUPLICATE DAY ]
-        </button>
-        <button 
-          onClick={() => {
-            addBlock({
-              title: 'NEW TASK',
-              description: '',
-              color: 'var(--color-green)',
-              date: format(currentDate, 'yyyy-MM-dd'),
-              startTime: '12:00',
-              duration: 60,
-            });
-          }}
-          className="bg-color-green text-[#050505] px-3 py-1 font-bold hover:scale-105 transition-transform"
-        >
-          [ + ADD TASK ]
-        </button>
-        <button 
-          onClick={() => setViewMode('DAY')}
-          className={`px-2 py-1 transition-colors ${viewMode === 'DAY' ? 'text-color-green' : 'hover:text-color-amber'}`}
-        >
-          {viewMode === 'DAY' ? '[ DAY ]' : 'DAY'}
-        </button>
-        <button 
-          onClick={() => setViewMode('WEEK')}
-          className={`px-2 py-1 transition-colors ${viewMode === 'WEEK' ? 'text-color-green' : 'hover:text-color-amber'}`}
-        >
-          {viewMode === 'WEEK' ? '[ WEEK ]' : 'WEEK'}
-        </button>
-        <span className="text-foreground/30 font-light">|</span>
-        <button 
-          onClick={() => setCliOpen(!cliOpen)}
-          className={`px-2 py-1 transition-colors ${cliOpen ? 'text-color-amber font-black' : 'hover:text-color-amber'}`}
-        >
-          {cliOpen ? '[ SHELL ]' : 'SHELL'}
-        </button>
+        {controlMode !== 'CLI' && (
+          <>
+            <button
+              onClick={() => setShowDupModal(true)}
+              className="text-color-amber border border-color-amber/50 px-3 py-1 font-bold hover:bg-color-amber/10 transition-colors flex-shrink-0"
+            >
+              [ DUPLICATE DAY ]
+            </button>
+            <button 
+              onClick={() => {
+                addBlock({
+                  title: 'NEW TASK',
+                  description: '',
+                  color: 'var(--color-green)',
+                  date: format(currentDate, 'yyyy-MM-dd'),
+                  startTime: '12:00',
+                  duration: 60,
+                });
+              }}
+              className="bg-color-green text-[#050505] px-3 py-1 font-bold hover:scale-105 transition-transform flex-shrink-0"
+            >
+              [ + ADD TASK ]
+            </button>
+            <button 
+              onClick={() => setViewMode('DAY')}
+              className={`px-2 py-1 transition-colors flex-shrink-0 ${viewMode === 'DAY' ? 'text-color-green' : 'hover:text-color-amber'}`}
+            >
+              {viewMode === 'DAY' ? '[ DAY ]' : 'DAY'}
+            </button>
+            <button 
+              onClick={() => setViewMode('WEEK')}
+              className={`px-2 py-1 transition-colors flex-shrink-0 ${viewMode === 'WEEK' ? 'text-color-green' : 'hover:text-color-amber'}`}
+            >
+              {viewMode === 'WEEK' ? '[ WEEK ]' : 'WEEK'}
+            </button>
+          </>
+        )}
       </div>
       </header>
 

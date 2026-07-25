@@ -15,6 +15,7 @@ interface TimeBlockProps {
 
 export default function TimeBlock({ block, onClick, onResize, timeOffset }: TimeBlockProps) {
   const updateBlock = useCalendarStore(state => state.updateBlock);
+  const controlMode = useCalendarStore(state => state.controlMode);
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: block.id,
     data: { block },
@@ -63,32 +64,34 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
       }}
       className="flex flex-col overflow-hidden text-xs shadow-sm hover:z-20 transition-opacity relative group"
     >
-      <div className="absolute top-1 right-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-        <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!isDragging) {
-              updateBlock(block.id, { completed: !block.completed });
-            }
-          }}
-          className="bg-background text-foreground border border-foreground/50 px-1 text-[10px] hover:bg-foreground hover:text-background transition-colors font-bold"
-          title="Toggle Completion"
-        >
-          {block.completed ? '[ ↺ ]' : '[ ✓ ]'}
-        </button>
-        <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!isDragging) {
-              onClick(block.id);
-            }
-          }}
-          className="bg-background text-foreground border border-foreground/50 px-1 text-[10px] hover:bg-foreground hover:text-background transition-colors font-bold"
-          title="Edit Task"
-        >
-          [ E ]
-        </button>
-      </div>
+      {controlMode !== 'CLI' && (
+        <div className="absolute top-1 right-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isDragging) {
+                updateBlock(block.id, { completed: !block.completed });
+              }
+            }}
+            className="bg-background text-foreground border border-foreground/50 px-1 text-[10px] hover:bg-foreground hover:text-background transition-colors font-bold"
+            title="Toggle Completion"
+          >
+            {block.completed ? '[ ↺ ]' : '[ ✓ ]'}
+          </button>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isDragging) {
+                onClick(block.id);
+              }
+            }}
+            className="bg-background text-foreground border border-foreground/50 px-1 text-[10px] hover:bg-foreground hover:text-background transition-colors font-bold"
+            title="Edit Task"
+          >
+            [ E ]
+          </button>
+        </div>
+      )}
       <div 
         className="px-2 py-1 flex-1 min-h-0 overflow-hidden break-words text-foreground font-semibold"
         {...attributes}

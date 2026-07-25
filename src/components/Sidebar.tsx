@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export default function Sidebar() {
-  const { currentDate, setCurrentDate, appMode, setAppMode, theme, setTheme, mobileMenuOpen, setMobileMenuOpen } = useCalendarStore();
+  const { currentDate, setCurrentDate, appMode, setAppMode, theme, setTheme, mobileMenuOpen, setMobileMenuOpen, controlMode, setControlMode } = useCalendarStore();
   const [calendarDate, setCalendarDate] = useState(currentDate);
 
   // Calculate grid for mini calendar
@@ -41,9 +41,17 @@ export default function Sidebar() {
       <aside className={`w-64 border-r border-foreground bg-surface flex flex-col flex-shrink-0 absolute md:relative z-40 h-full transition-transform ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         
         {/* Logo Area */}
-        <div className="h-20 border-b border-foreground flex items-center gap-4 px-6 bg-surface-raised flex-shrink-0">
-          <Image src="/logo.svg" alt="SLOT Logo" width={40} height={40} className="invert dark:invert-0" />
-          <h1 className="text-2xl font-bold tracking-widest text-foreground">SLOT</h1>
+        <div className="py-4 border-b border-foreground flex flex-col justify-center gap-3 px-6 bg-surface-raised flex-shrink-0 min-h-[5rem]">
+          <div className="flex items-center gap-4">
+            <Image src="/logo.svg" alt="SLOT Logo" width={40} height={40} />
+            <h1 className="text-2xl font-bold tracking-widest text-foreground">SLOT</h1>
+          </div>
+          <button
+            onClick={() => setControlMode(controlMode === 'GUI' ? 'CLI' : 'GUI')}
+            className="text-[10px] font-bold self-start border border-foreground/30 px-2 py-0.5 hover:bg-foreground hover:text-background transition-colors"
+          >
+            MODE: {controlMode === 'GUI' ? '[ GUI ]' : '[ CLI ]'}
+          </button>
         </div>
 
         {/* Scrollable middle container */}
@@ -111,14 +119,16 @@ export default function Sidebar() {
           </div>
 
           {/* Themes */}
-          <div className="p-4 border-t border-foreground/20 flex-shrink-0">
-            <h3 className="text-xs font-bold text-foreground/50 mb-2">THEME</h3>
-            <div className="flex flex-col gap-1">
-              <button onClick={() => setTheme('PAPER')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'PAPER' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ PAPER ]</button>
-              <button onClick={() => setTheme('DARK_AMBER')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'DARK_AMBER' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ DARK AMBER ]</button>
-              <button onClick={() => setTheme('E_INK')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'E_INK' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ E-INK ]</button>
+          {controlMode !== 'CLI' && (
+            <div className="p-4 border-t border-foreground/20 flex-shrink-0">
+              <h3 className="text-xs font-bold text-foreground/50 mb-2">THEME</h3>
+              <div className="flex flex-col gap-1">
+                <button onClick={() => setTheme('PAPER')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'PAPER' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ PAPER ]</button>
+                <button onClick={() => setTheme('DARK_AMBER')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'DARK_AMBER' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ DARK AMBER ]</button>
+                <button onClick={() => setTheme('E_INK')} className={`text-left px-2 py-1 text-xs font-bold ${theme === 'E_INK' ? 'bg-foreground text-background' : 'hover:bg-foreground/10'}`}>[ E-INK ]</button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
       </aside>

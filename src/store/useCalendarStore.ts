@@ -50,6 +50,9 @@ interface CalendarState {
 
   cliOpen: boolean;
   setCliOpen: (open: boolean) => void;
+
+  controlMode: 'GUI' | 'CLI';
+  setControlMode: (mode: 'GUI' | 'CLI') => void;
 }
 
 export const useCalendarStore = create<CalendarState>()(
@@ -72,6 +75,9 @@ export const useCalendarStore = create<CalendarState>()(
 
       cliOpen: true,
       setCliOpen: (open) => set({ cliOpen: open }),
+
+      controlMode: 'GUI',
+      setControlMode: (mode) => set({ controlMode: mode }),
 
       addBlock: (block) => {
         const id = Math.random().toString(36).substring(2, 9);
@@ -129,7 +135,8 @@ export const useCalendarStore = create<CalendarState>()(
         focusMinutesLogged: state.focusMinutesLogged,
         timerDuration: state.timerDuration,
         timerMode: state.timerMode,
-        cliOpen: state.cliOpen
+        cliOpen: state.cliOpen,
+        controlMode: state.controlMode
       }),
     }
   )

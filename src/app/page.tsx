@@ -9,7 +9,7 @@ import StatsDashboard from '@/components/StatsDashboard';
 import CommandLineInterface from '@/components/CommandLineInterface';
 import { useCalendarStore } from '@/store/useCalendarStore';
 import { playTerminalBeep, sendDesktopNotification } from '@/lib/notifications';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const { 
@@ -21,15 +21,19 @@ export default function Home() {
     timerDuration, 
     setTimerState, 
     addFocusMinutes,
-    cliOpen
+    controlMode
   } = useCalendarStore();
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
   // Global background timer ticking
   useEffect(() => {
+    if (!mounted) return;
     let interval: NodeJS.Timeout;
     if (timerIsActive && timerTimeLeft > 0) {
       interval = setInterval(() => {
@@ -47,7 +51,15 @@ export default function Home() {
       }
     }
     return () => clearInterval(interval);
-  }, [timerIsActive, timerTimeLeft, timerMode, timerDuration, setTimerState, addFocusMinutes]);
+  }, [timerIsActive, timerTimeLeft, timerMode, timerDuration, setTimerState, addFocusMinutes, mounted]);
+
+  if (!mounted) {
+    return (
+      <main className="flex flex-row h-screen w-full bg-background items-center justify-center text-foreground font-mono text-sm font-bold">
+        [ SYSTEM BOOTING... ]
+      </main>
+    );
+  }
 
   return (
     <main className="flex flex-row h-screen w-full overflow-hidden bg-background text-foreground">
@@ -63,7 +75,7 @@ export default function Home() {
         </div>
 
         {/* Collapsible Full-Width CLI Drawer */}
-        {cliOpen && <CommandLineInterface />}
+        {controlMode === 'CLI' && <CommandLineInterface />}
       </div>
       <TaskModal />
     </main>
