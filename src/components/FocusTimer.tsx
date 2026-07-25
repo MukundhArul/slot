@@ -5,60 +5,51 @@ import { playTerminalBeep, sendDesktopNotification } from '@/lib/notifications';
 import { useCalendarStore } from '@/store/useCalendarStore';
 
 export default function FocusTimer() {
-  const { addFocusMinutes } = useCalendarStore();
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
-  const [isActive, setIsActive] = useState(false);
-  const [mode, setMode] = useState<'FOCUS' | 'BREAK'>('FOCUS');
-  const [focusDuration, setFocusDuration] = useState(25); // in minutes
+  const { 
+    timerTimeLeft, 
+    timerIsActive, 
+    timerMode, 
+    timerDuration, 
+    setTimerState 
+  } = useCalendarStore();
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isActive && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft((time) => time - 1);
-      }, 1000);
-    } else if (isActive && timeLeft === 0) {
-      setIsActive(false);
-      
-      // Timer finished!
-      playTerminalBeep();
-      if (mode === 'FOCUS') {
-        sendDesktopNotification('FOCUS COMPLETE', `You logged ${focusDuration} minutes of deep work! Time for a break.`);
-        addFocusMinutes(focusDuration);
-      } else {
-        sendDesktopNotification('BREAK COMPLETE', 'Break time is over. Ready to focus?');
-      }
-    }
-    return () => clearInterval(interval);
-  }, [isActive, timeLeft, mode, focusDuration, addFocusMinutes]);
-
-  const toggleTimer = () => setIsActive(!isActive);
+  const toggleTimer = () => setTimerState({ timerIsActive: !timerIsActive });
 
   const resetTimer = () => {
-    setIsActive(false);
-    setTimeLeft(mode === 'FOCUS' ? focusDuration * 60 : 5 * 60);
+    setTimerState({
+      timerIsActive: false,
+      timerTimeLeft: timerMode === 'FOCUS' ? timerDuration * 60 : 5 * 60
+    });
   };
 
   const switchMode = (newMode: 'FOCUS' | 'BREAK') => {
-    setMode(newMode);
-    setIsActive(false);
-    setTimeLeft(newMode === 'FOCUS' ? focusDuration * 60 : 5 * 60);
+    setTimerState({
+      timerMode: newMode,
+      timerIsActive: false,
+      timerTimeLeft: newMode === 'FOCUS' ? timerDuration * 60 : 5 * 60
+    });
   };
 
   const changeFocusDuration = (mins: number) => {
-    setFocusDuration(mins);
-    if (mode === 'FOCUS') {
-      setIsActive(false);
-      setTimeLeft(mins * 60);
+    if (timerMode === 'FOCUS') {
+      setTimerState({
+        timerDuration: mins,
+        timerIsActive: false,
+        timerTimeLeft: mins * 60
+      });
+    } else {
+      setTimerState({
+        timerDuration: mins
+      });
     }
   };
 
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
+  const minutes = Math.floor(timerTimeLeft / 60);
+  const seconds = timerTimeLeft % 60;
   
   // Progress bar logic
-  const totalSeconds = mode === 'FOCUS' ? focusDuration * 60 : 5 * 60;
-  const progress = 1 - (timeLeft / totalSeconds);
+  const totalSeconds = timerMode === 'FOCUS' ? timerDuration * 60 : 5 * 60;
+  const progress = totalSeconds === 0 ? 0 : 1 - (timerTimeLeft / totalSeconds);
   const barLength = 40;
   const filledBars = Math.floor(progress * barLength);
   const emptyBars = barLength - filledBars;
@@ -85,20 +76,20 @@ export default function FocusTimer() {
         <div className="flex gap-6">
           <button 
             onClick={() => switchMode('FOCUS')}
-            className={`px-6 py-2 font-bold tracking-widest text-sm transition-all border ${mode === 'FOCUS' ? 'bg-color-red text-black border-color-red' : 'border-foreground/30 text-foreground/50 hover:border-foreground hover:text-foreground'}`}
+            className={`px-6 py-2 font-bold tracking-widest text-sm transition-all border ${timerMode === 'FOCUS' ? 'bg-color-red text-black border-color-red' : 'border-foreground/30 text-foreground/50 hover:border-foreground hover:text-foreground'}`}
           >
-            {mode === 'FOCUS' ? '[ FOCUS ]' : 'FOCUS'}
+            {timerMode === 'FOCUS' ? '[ FOCUS ]' : 'FOCUS'}
           </button>
           <button 
             onClick={() => switchMode('BREAK')}
-            className={`px-6 py-2 font-bold tracking-widest text-sm transition-all border ${mode === 'BREAK' ? 'bg-color-blue text-black border-color-blue' : 'border-foreground/30 text-foreground/50 hover:border-foreground hover:text-foreground'}`}
+            className={`px-6 py-2 font-bold tracking-widest text-sm transition-all border ${timerMode === 'BREAK' ? 'bg-color-blue text-black border-color-blue' : 'border-foreground/30 text-foreground/50 hover:border-foreground hover:text-foreground'}`}
           >
-            {mode === 'BREAK' ? '[ BREAK ]' : 'BREAK'}
+            {timerMode === 'BREAK' ? '[ BREAK ]' : 'BREAK'}
           </button>
         </div>
 
         {/* Duration Selector for Focus Mode */}
-        {mode === 'FOCUS' && (
+        {timerMode === 'FOCUS' && (
           <div className="flex gap-4 text-xs font-bold tracking-widest">
             {[
               { label: '25M', value: 25 },
@@ -109,9 +100,9 @@ export default function FocusTimer() {
               <button
                 key={opt.value}
                 onClick={() => changeFocusDuration(opt.value)}
-                className={`px-3 py-1 transition-colors border ${focusDuration === opt.value ? 'bg-foreground text-background border-foreground' : 'border-transparent text-foreground/50 hover:text-foreground'}`}
+                className={`px-3 py-1 transition-colors border ${timerDuration === opt.value ? 'bg-foreground text-background border-foreground' : 'border-transparent text-foreground/50 hover:text-foreground'}`}
               >
-                {focusDuration === opt.value ? `[ ${opt.label} ]` : opt.label}
+                {timerDuration === opt.value ? `[ ${opt.label} ]` : opt.label}
               </button>
             ))}
           </div>
@@ -126,8 +117,8 @@ export default function FocusTimer() {
             {asciiBar}
           </div>
           <div className="mt-4 text-xs text-foreground/50 tracking-widest uppercase flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-color-amber animate-pulse shadow-[0_0_8px_var(--color-amber)]' : 'bg-foreground/30'}`}></span>
-            SYSTEM STATUS: {isActive ? 'ACTIVE' : 'STANDBY'}
+            <span className={`w-2 h-2 rounded-full ${timerIsActive ? 'bg-color-amber animate-pulse shadow-[0_0_8px_var(--color-amber)]' : 'bg-foreground/30'}`}></span>
+            SYSTEM STATUS: {timerIsActive ? 'ACTIVE' : 'STANDBY'}
           </div>
         </div>
 
@@ -137,7 +128,7 @@ export default function FocusTimer() {
             onClick={toggleTimer}
             className="px-10 py-4 bg-foreground text-background font-bold tracking-widest hover:bg-color-amber hover:text-black transition-all border border-foreground hover:border-color-amber shadow-[0_0_10px_transparent] hover:shadow-[0_0_20px_var(--color-amber)] uppercase text-lg"
           >
-            {isActive ? '[ PAUSE ]' : '[ START ]'}
+            {timerIsActive ? '[ PAUSE ]' : '[ START ]'}
           </button>
           <button 
             onClick={resetTimer}

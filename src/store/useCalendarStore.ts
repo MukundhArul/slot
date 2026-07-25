@@ -41,6 +41,12 @@ interface CalendarState {
   navigateNext: () => void;
 
   duplicateDay: (sourceDate: string, targetDate: string) => void;
+
+  timerTimeLeft: number;
+  timerIsActive: boolean;
+  timerMode: 'FOCUS' | 'BREAK';
+  timerDuration: number;
+  setTimerState: (updates: Partial<{ timerTimeLeft: number; timerIsActive: boolean; timerMode: 'FOCUS' | 'BREAK'; timerDuration: number }>) => void;
 }
 
 export const useCalendarStore = create<CalendarState>()(
@@ -54,6 +60,12 @@ export const useCalendarStore = create<CalendarState>()(
       theme: 'PAPER',
       mobileMenuOpen: false,
       focusMinutesLogged: 0,
+      
+      timerTimeLeft: 25 * 60,
+      timerIsActive: false,
+      timerMode: 'FOCUS',
+      timerDuration: 25,
+      setTimerState: (updates) => set((state) => ({ ...state, ...updates })),
 
       addBlock: (block) => {
         const id = Math.random().toString(36).substring(2, 9);
@@ -108,7 +120,9 @@ export const useCalendarStore = create<CalendarState>()(
       partialize: (state) => ({ 
         blocks: state.blocks, 
         theme: state.theme,
-        focusMinutesLogged: state.focusMinutesLogged 
+        focusMinutesLogged: state.focusMinutesLogged,
+        timerDuration: state.timerDuration,
+        timerMode: state.timerMode
       }),
     }
   )
