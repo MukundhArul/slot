@@ -13,6 +13,7 @@ export type TimeBlock = {
   startTime: string; // HH:mm format
   duration: number; // in minutes
   completed?: boolean;
+  tags?: string[];
 };
 
 interface CalendarState {
@@ -22,6 +23,7 @@ interface CalendarState {
   selectedBlockId: string | null;
   theme: Theme;
   mobileMenuOpen: boolean;
+  activeTagFilter: string | null;
 
   addBlock: (block: Omit<TimeBlock, 'id'>) => void;
   updateBlock: (id: string, updates: Partial<TimeBlock>) => void;
@@ -32,6 +34,7 @@ interface CalendarState {
   setSelectedBlockId: (id: string | null) => void;
   setTheme: (theme: Theme) => void;
   setMobileMenuOpen: (open: boolean) => void;
+  setActiveTagFilter: (tag: string | null) => void;
 
   navigatePrevious: () => void;
   navigateNext: () => void;
@@ -53,6 +56,7 @@ export const useCalendarStore = create<CalendarState>()(
       selectedBlockId: null,
       theme: 'PAPER',
       mobileMenuOpen: false,
+      activeTagFilter: null,
 
       cliOpen: true,
       setCliOpen: (open) => set({ cliOpen: open }),
@@ -82,6 +86,7 @@ export const useCalendarStore = create<CalendarState>()(
       setSelectedBlockId: (id) => set({ selectedBlockId: id }),
       setTheme: (theme) => set({ theme }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
+      setActiveTagFilter: (tag) => set({ activeTagFilter: tag }),
 
       navigatePrevious: () => set((state) => ({
         currentDate: addDays(state.currentDate, state.viewMode === 'DAY' ? -1 : -7)

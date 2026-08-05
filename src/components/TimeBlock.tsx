@@ -101,6 +101,15 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
           {block.title}
           {block.completed && <span className="w-2 h-2 rounded-full bg-[#cc2200] shrink-0" title="Completed" />}
         </div>
+        {block.tags && block.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-1">
+            {block.tags.map(tag => (
+              <span key={tag} className="text-[9px] bg-foreground/10 text-black px-1 font-mono rounded-sm border border-foreground/20 leading-tight">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
         {block.duration >= 30 && <div className="text-black/80 line-clamp-2">{block.description}</div>}
       </div>
 

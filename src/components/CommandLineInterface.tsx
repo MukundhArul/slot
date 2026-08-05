@@ -18,6 +18,7 @@ export default function CommandLineInterface() {
     removeBlock,
     setViewMode,
     setTheme,
+    setActiveTagFilter,
     navigatePrevious,
     navigateNext,
     setMobileMenuOpen,
@@ -100,12 +101,13 @@ export default function CommandLineInterface() {
 
     if (mainCommand === '/help') {
       logOutput('HELP - AVAILABLE COMMANDS:', 'info');
-      logOutput('  /add "<title>" HH:MM [dur] -> Add task (e.g. 1.5h, 45m)', 'info');
+      logOutput('  /add "<title>" HH:MM [dur] [#tags...] -> Add task', 'info');
       logOutput('  /done "<title>" or /complete "<title>" -> Complete task', 'info');
       logOutput('  /undone "<title>" or /uncomplete "<title>" -> Reactivate task', 'info');
       logOutput('  /rm "<title>" or /remove "<title>" -> Remove task', 'info');
       logOutput('  /theme <paper | dark_amber | e_ink>', 'info');
       logOutput('  /view <day | week>', 'info');
+      logOutput('  /filter <#tag> | clear -> Filter blocks by tag', 'info');
       logOutput('  /next | /prev -> Navigate active date', 'info');
       logOutput('  /clear -> Clears tasks scheduled on active date', 'info');
       if (controlMode !== 'CLI') {
@@ -124,21 +126,25 @@ export default function CommandLineInterface() {
     }
 
     if (mainCommand === '/add') {
-      // Match: /add "title" HH:MM [duration]
-      const regex = /^\/add\s+"([^"]+)"\s+(\d{1,2}:\d{2})(?:\s+(\S+))?$/i;
+      // Match: /add "title" HH:MM [duration] [tags...]
+      // E.g., /add "Review PRs" 14:30 1.5h #work #urgent
+      const regex = /^\/add\s+"([^"]+)"\s+(\d{1,2}:\d{2})(?:\s+([a-zA-Z0-9.]+))?(?:\s+(.*))?$/i;
       const match = trimmed.match(regex);
 
       if (!match) {
-        logOutput('ERR: FORMAT MUST BE: /add "Title" HH:MM [duration]', 'error');
-        logOutput('  E.G., /add "Review PRs" 14:30 1.5h', 'info');
+        logOutput('ERR: FORMAT MUST BE: /add "Title" HH:MM [duration] [#tags]', 'error');
+        logOutput('  E.G., /add "Review PRs" 14:30 1.5h #work', 'info');
         return;
       }
 
       const title = match[1];
       const timeStr = match[2];
       const durStr = match[3] || '30m';
+      const tagsStr = match[4] || '';
       const duration = parseDuration(durStr);
       const dateStr = format(currentDate, 'yyyy-MM-dd');
+      
+      const parsedTags = tagsStr.split(/\s+/).filter(Boolean).map(t => t.startsWith('#') ? t : `#${t}`).filter(t => t !== '#');
 
       addBlock({
         title,
@@ -146,7 +152,8 @@ export default function CommandLineInterface() {
         color: 'bg-color-amber/10',
         date: dateStr,
         startTime: timeStr,
-        duration
+        duration,
+        tags: parsedTags.length > 0 ? parsedTags : undefined
       });
 
       logOutput(`SUCCESS: ADDED "${title.toUpperCase()}" AT ${timeStr} FOR ${durStr}`, 'success');
@@ -227,6 +234,23 @@ export default function CommandLineInterface() {
       return;
     }
 
+    if (mainCommand === '/filter') {
+      const tagArg = parts[1]?.toLowerCase();
+      if (!tagArg) {
+        logOutput('ERR: PROVIDE A TAG (e.g., /filter #work) OR "clear"', 'error');
+        return;
+      }
+
+      if (tagArg === 'clear' || tagArg === 'none') {
+        setActiveTagFilter(null);
+        logOutput('SUCCESS: FILTER CLEARED', 'success');
+      } else {
+        const filterTag = tagArg.startsWith('#') ? tagArg : `#${tagArg}`;
+        setActiveTagFilter(filterTag);
+        logOutput(`SUCCESS: FILTER SET TO ${filterTag}`, 'success');
+      }
+      return;
+    }
 
     if (mainCommand === '/view') {
       const viewArg = parts[1]?.toLowerCase();

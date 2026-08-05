@@ -9,7 +9,7 @@ import { snapToGrid, timeToMinutes, minutesToTime } from '@/lib/utils';
 import TimeBlock from './TimeBlock';
 
 export default function CalendarGrid() {
-  const { blocks, currentDate, viewMode, updateBlock, setSelectedBlockId, addBlock } = useCalendarStore();
+  const { blocks, currentDate, viewMode, activeTagFilter, updateBlock, setSelectedBlockId, addBlock } = useCalendarStore();
   const gridRef = useRef<HTMLDivElement>(null);
   const GRID_OFFSET = 16;
 
@@ -98,7 +98,13 @@ export default function CalendarGrid() {
             <div className="flex-1 flex" ref={gridRef}>
               {days.map((day) => {
                 const dayStr = format(day, 'yyyy-MM-dd');
-                const dayBlocks = blocks.filter(b => b.date === dayStr);
+                const dayBlocks = blocks.filter(b => {
+                  if (b.date !== dayStr) return false;
+                  if (activeTagFilter) {
+                    return b.tags?.includes(activeTagFilter);
+                  }
+                  return true;
+                });
 
                 return (
                   <div key={dayStr} className="flex-1 relative border-r border-foreground/20 min-w-0" style={{ height: `${24 * HOUR_HEIGHT + GRID_OFFSET}px` }}>

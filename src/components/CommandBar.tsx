@@ -5,7 +5,7 @@ import { format, addDays } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 export default function CommandBar() {
-  const { currentDate, viewMode, setViewMode, navigatePrevious, navigateNext, addBlock, duplicateDay, setMobileMenuOpen, controlMode } = useCalendarStore();
+  const { currentDate, viewMode, setViewMode, activeTagFilter, setActiveTagFilter, navigatePrevious, navigateNext, addBlock, duplicateDay, setMobileMenuOpen, controlMode } = useCalendarStore();
   const [timeStr, setTimeStr] = useState('');
   
   const [showDupModal, setShowDupModal] = useState(false);
@@ -42,6 +42,20 @@ export default function CommandBar() {
         <span className="whitespace-nowrap">
           DATE: {format(currentDate, 'yyyy.MM.dd')}
         </span>
+        {activeTagFilter && (
+          <div className="flex items-center gap-1 border border-color-amber text-color-amber px-2">
+            <span>FILTER: {activeTagFilter}</span>
+            {controlMode !== 'CLI' && (
+              <button 
+                onClick={() => setActiveTagFilter(null)}
+                className="hover:bg-color-amber hover:text-background font-bold px-1 transition-colors"
+                title="Clear Filter"
+              >
+                [X]
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">

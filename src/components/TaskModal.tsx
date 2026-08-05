@@ -15,6 +15,7 @@ export default function TaskModal() {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [color, setColor] = useState('');
+  const [tags, setTags] = useState('');
 
   useEffect(() => {
     if (block) {
@@ -25,6 +26,7 @@ export default function TaskModal() {
       const startMins = timeToMinutes(block.startTime);
       setEndTime(minutesToTime(startMins + block.duration));
       setColor(block.color);
+      setTags(block.tags?.join(' ') || '');
     }
   }, [block]);
 
@@ -37,8 +39,10 @@ export default function TaskModal() {
       endMins = startMins + 15; // default to 15m if invalid
     }
     const duration = endMins - startMins;
+    
+    const parsedTags = tags.split(/\s+/).map(t => t.startsWith('#') ? t : `#${t}`).filter(t => t !== '#');
 
-    updateBlock(block.id, { title, description, date, startTime, duration, color });
+    updateBlock(block.id, { title, description, date, startTime, duration, color, tags: parsedTags.length > 0 ? parsedTags : undefined });
     setSelectedBlockId(null);
   };
 
@@ -95,6 +99,16 @@ export default function TaskModal() {
                 className="w-full bg-surface border border-foreground/50 px-2 py-1 outline-none focus:border-color-green font-mono"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-xs text-foreground/70 mb-1">TAGS (space separated)</label>
+            <input
+              className="w-full bg-background border border-foreground/50 p-2 text-foreground focus:outline-none focus:border-color-green transition-colors text-xs font-mono"
+              value={tags}
+              onChange={e => setTags(e.target.value)}
+              placeholder="e.g. #work #urgent"
+            />
           </div>
 
           <div>
