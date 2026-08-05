@@ -10,6 +10,7 @@ type LogEntry = {
 };
 
 export default function CommandLineInterface() {
+  const {
     currentDate,
     blocks,
     addBlock,
