@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export default function Sidebar() {
-  const { currentDate, setCurrentDate, appMode, setAppMode, theme, setTheme, mobileMenuOpen, setMobileMenuOpen, controlMode, setControlMode } = useCalendarStore();
+  const { currentDate, setCurrentDate, theme, setTheme, mobileMenuOpen, setMobileMenuOpen, controlMode, setControlMode } = useCalendarStore();
   const [calendarDate, setCalendarDate] = useState(currentDate);
 
   // Calculate grid for mini calendar
@@ -56,27 +56,6 @@ export default function Sidebar() {
 
         {/* Scrollable middle container */}
         <div className="flex-1 overflow-y-auto flex flex-col min-h-0 custom-scrollbar">
-          {/* Navigation */}
-          <nav className="p-4 flex flex-col gap-2 flex-shrink-0">
-            <button 
-              onClick={() => setAppMode('PLANNER')}
-              className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'PLANNER' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-color-amber border-transparent hover:border-foreground/20'}`}
-            >
-              {appMode === 'PLANNER' ? '[ DAY PLANNER ]' : 'DAY PLANNER'}
-            </button>
-            <button 
-              onClick={() => setAppMode('TIMER')}
-              className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'TIMER' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-color-amber border-transparent hover:border-foreground/20'}`}
-            >
-              {appMode === 'TIMER' ? '[ FOCUS TIMER ]' : 'FOCUS TIMER'}
-            </button>
-            <button 
-              onClick={() => setAppMode('STATS')}
-              className={`text-left px-3 py-2 font-bold uppercase transition-colors border ${appMode === 'STATS' ? 'bg-foreground text-background border-foreground' : 'hover:bg-foreground/10 hover:text-color-amber border-transparent hover:border-foreground/20'}`}
-            >
-              {appMode === 'STATS' ? '[ STATISTICS ]' : 'STATISTICS'}
-            </button>
-          </nav>
 
           {/* Mini Calendar */}
           <div className="p-4 mt-auto flex-shrink-0 border-t border-foreground/10">

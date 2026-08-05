@@ -20,10 +20,8 @@ interface CalendarState {
   currentDate: Date;
   viewMode: 'DAY' | 'WEEK';
   selectedBlockId: string | null;
-  appMode: 'PLANNER' | 'TIMER' | 'STATS';
   theme: Theme;
   mobileMenuOpen: boolean;
-  focusMinutesLogged: number;
 
   addBlock: (block: Omit<TimeBlock, 'id'>) => void;
   updateBlock: (id: string, updates: Partial<TimeBlock>) => void;
@@ -32,22 +30,13 @@ interface CalendarState {
   setCurrentDate: (date: Date) => void;
   setViewMode: (mode: 'DAY' | 'WEEK') => void;
   setSelectedBlockId: (id: string | null) => void;
-  setAppMode: (mode: 'PLANNER' | 'TIMER' | 'STATS') => void;
   setTheme: (theme: Theme) => void;
   setMobileMenuOpen: (open: boolean) => void;
-  addFocusMinutes: (mins: number) => void;
 
   navigatePrevious: () => void;
   navigateNext: () => void;
 
   duplicateDay: (sourceDate: string, targetDate: string) => void;
-
-  timerTimeLeft: number;
-  timerIsActive: boolean;
-  timerMode: 'FOCUS' | 'BREAK';
-  timerDuration: number;
-  setTimerState: (updates: Partial<{ timerTimeLeft: number; timerIsActive: boolean; timerMode: 'FOCUS' | 'BREAK'; timerDuration: number }>) => void;
-
   cliOpen: boolean;
   setCliOpen: (open: boolean) => void;
 
@@ -62,16 +51,8 @@ export const useCalendarStore = create<CalendarState>()(
       currentDate: new Date(),
       viewMode: 'WEEK',
       selectedBlockId: null,
-      appMode: 'PLANNER',
       theme: 'PAPER',
       mobileMenuOpen: false,
-      focusMinutesLogged: 0,
-      
-      timerTimeLeft: 25 * 60,
-      timerIsActive: false,
-      timerMode: 'FOCUS',
-      timerDuration: 25,
-      setTimerState: (updates) => set((state) => ({ ...state, ...updates })),
 
       cliOpen: true,
       setCliOpen: (open) => set({ cliOpen: open }),
@@ -99,10 +80,8 @@ export const useCalendarStore = create<CalendarState>()(
       setCurrentDate: (date) => set({ currentDate: date }),
       setViewMode: (mode) => set({ viewMode: mode }),
       setSelectedBlockId: (id) => set({ selectedBlockId: id }),
-      setAppMode: (mode) => set({ appMode: mode }),
       setTheme: (theme) => set({ theme }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
-      addFocusMinutes: (mins) => set((state) => ({ focusMinutesLogged: state.focusMinutesLogged + mins })),
 
       navigatePrevious: () => set((state) => ({
         currentDate: addDays(state.currentDate, state.viewMode === 'DAY' ? -1 : -7)
@@ -132,9 +111,6 @@ export const useCalendarStore = create<CalendarState>()(
       partialize: (state) => ({ 
         blocks: state.blocks, 
         theme: state.theme,
-        focusMinutesLogged: state.focusMinutesLogged,
-        timerDuration: state.timerDuration,
-        timerMode: state.timerMode,
         cliOpen: state.cliOpen,
         controlMode: state.controlMode
       }),

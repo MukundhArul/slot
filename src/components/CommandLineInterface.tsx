@@ -10,18 +10,13 @@ type LogEntry = {
 };
 
 export default function CommandLineInterface() {
-  const {
     currentDate,
     blocks,
     addBlock,
     updateBlock,
     removeBlock,
-    setAppMode,
     setViewMode,
     setTheme,
-    setTimerState,
-    timerMode,
-    timerDuration,
     navigatePrevious,
     navigateNext,
     setMobileMenuOpen,
@@ -108,11 +103,7 @@ export default function CommandLineInterface() {
       logOutput('  /done "<title>" or /complete "<title>" -> Complete task', 'info');
       logOutput('  /undone "<title>" or /uncomplete "<title>" -> Reactivate task', 'info');
       logOutput('  /rm "<title>" or /remove "<title>" -> Remove task', 'info');
-      logOutput('  /timer <start | pause | reset>', 'info');
-      logOutput('  /timer <duration> -> Set duration (e.g. 25m, 1h)', 'info');
-      logOutput('  /timer <focus | break> -> Toggle timer mode', 'info');
       logOutput('  /theme <paper | dark_amber | e_ink>', 'info');
-      logOutput('  /mode <planner | timer | stats>', 'info');
       logOutput('  /view <day | week>', 'info');
       logOutput('  /next | /prev -> Navigate active date', 'info');
       logOutput('  /clear -> Clears tasks scheduled on active date', 'info');
@@ -235,74 +226,6 @@ export default function CommandLineInterface() {
       return;
     }
 
-    if (mainCommand === '/timer') {
-      const arg = parts[1]?.toLowerCase();
-      if (!arg) {
-        logOutput('ERR: CHOOSE TIMER ACTION (start, pause, reset, focus, break, or duration)', 'error');
-        return;
-      }
-
-      if (arg === 'start') {
-        setTimerState({ timerIsActive: true });
-        logOutput('SUCCESS: FOCUS TIMER RUNNING', 'success');
-      } else if (arg === 'pause' || arg === 'stop') {
-        setTimerState({ timerIsActive: false });
-        logOutput('SUCCESS: FOCUS TIMER PAUSED', 'success');
-      } else if (arg === 'reset') {
-        setTimerState({
-          timerIsActive: false,
-          timerTimeLeft: timerMode === 'FOCUS' ? timerDuration * 60 : 5 * 60
-        });
-        logOutput('SUCCESS: FOCUS TIMER RESET', 'success');
-      } else if (arg === 'focus') {
-        setTimerState({
-          timerMode: 'FOCUS',
-          timerIsActive: false,
-          timerTimeLeft: timerDuration * 60
-        });
-        logOutput('SUCCESS: MODE SET TO FOCUS', 'success');
-      } else if (arg === 'break') {
-        setTimerState({
-          timerMode: 'BREAK',
-          timerIsActive: false,
-          timerTimeLeft: 5 * 60
-        });
-        logOutput('SUCCESS: MODE SET TO BREAK', 'success');
-      } else {
-        // Test if arg is a valid duration (e.g. 25, 25m, 1h, 1.5h)
-        const durRegex = /^(\d+(?:\.\d+)?)(m|h|min|hour|hours|mins)?$/i;
-        if (durRegex.test(arg)) {
-          const mins = parseDuration(arg);
-          setTimerState({
-            timerDuration: mins,
-            timerIsActive: false,
-            timerTimeLeft: mins * 60,
-            timerMode: 'FOCUS'
-          });
-          logOutput(`SUCCESS: TIMER FOCUS TIME SET TO ${mins} MINS`, 'success');
-        } else {
-          logOutput(`ERR: UNKNOWN TIMER COMMAND: "${arg}"`, 'error');
-        }
-      }
-      return;
-    }
-
-    if (mainCommand === '/mode') {
-      const modeArg = parts[1]?.toLowerCase();
-      if (!modeArg) {
-        logOutput('ERR: CHOOSE A MODE (planner, timer, stats)', 'error');
-        return;
-      }
-
-      const normalized = modeArg.toUpperCase();
-      if (normalized === 'PLANNER' || normalized === 'TIMER' || normalized === 'STATS') {
-        setAppMode(normalized as any);
-        logOutput(`SUCCESS: VIEW MODE SET TO ${normalized}`, 'success');
-      } else {
-        logOutput(`ERR: UNKNOWN MODE: "${modeArg}"`, 'error');
-      }
-      return;
-    }
 
     if (mainCommand === '/view') {
       const viewArg = parts[1]?.toLowerCase();
