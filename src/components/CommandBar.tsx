@@ -18,7 +18,8 @@ export default function CommandBar() {
     setMobileMenuOpen, 
     controlMode,
     scratchpadOpen,
-    setScratchpadOpen
+    setScratchpadOpen,
+    setSelectedBlockId
   } = useCalendarStore();
   const [timeStr, setTimeStr] = useState('');
   
@@ -104,16 +105,17 @@ export default function CommandBar() {
             </button>
             <button 
               onClick={() => {
-                addBlock({
+                const newId = addBlock({
                   title: 'NEW TASK',
                   description: '',
-                  color: 'var(--color-green)',
+                  color: 'var(--color-amber)',
                   date: format(currentDate, 'yyyy-MM-dd'),
                   startTime: '12:00',
                   duration: 60,
                 });
+                setSelectedBlockId(newId);
               }}
-              className="bg-color-green text-[#050505] px-3 py-1 font-bold hover:scale-105 transition-transform flex-shrink-0"
+              className="bg-foreground text-background px-3 py-1 font-bold hover:scale-105 transition-transform flex-shrink-0"
             >
               [ + ADD TASK ]
             </button>

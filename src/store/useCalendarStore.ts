@@ -42,7 +42,7 @@ interface CalendarState {
   scratchpads: Record<string, string>;
   scratchpadOpen: boolean;
 
-  addBlock: (block: Omit<TimeBlock, 'id'>) => void;
+  addBlock: (block: Omit<TimeBlock, 'id'>) => string;
   updateBlock: (id: string, updates: Partial<TimeBlock>) => void;
   removeBlock: (id: string) => void;
 
@@ -89,9 +89,13 @@ export const useCalendarStore = create<CalendarState>()(
       controlMode: 'GUI',
       setControlMode: (mode) => set({ controlMode: mode }),
 
-      addBlock: (block) => set((state) => ({ 
-        blocks: [...state.blocks, { ...block, id: Math.random().toString(36).substr(2, 9) }] 
-      })),
+      addBlock: (block) => {
+        const newId = Math.random().toString(36).substr(2, 9);
+        set((state) => ({ 
+          blocks: [...state.blocks, { ...block, id: newId }] 
+        }));
+        return newId;
+      },
       updateBlock: (id, updates) => set((state) => {
         const existing = state.blocks.find(b => b.id === id);
         if (existing) {
