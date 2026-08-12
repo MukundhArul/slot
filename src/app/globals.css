@@ -17,10 +17,10 @@
 }
 
 [data-theme="DARK_AMBER"] {
-  --background: #111111;
+  --background: #000000;
   --foreground: #ffaa00;
-  --surface: #222222;
-  --surface-raised: #333333;
+  --surface: #0a0a0a;
+  --surface-raised: #141414;
   --color-amber: #ff8800;
   --color-amber-light: #ffa238;
   --color-red: #ff3300;
