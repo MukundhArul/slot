@@ -14,10 +14,25 @@ export type TimeBlock = {
   duration: number; // in minutes
   completed?: boolean;
   tags?: string[];
+  isRoutine?: boolean;
+  routineId?: string;
+  deleted?: boolean;
+};
+
+export type Routine = {
+  id: string;
+  title: string;
+  color: string;
+  startTime: string; // HH:mm
+  duration: number; // in mins
+  daysOfWeek: number[]; // 0=Sun, 1=Mon, etc.
+  startDate: string; // YYYY-MM-DD
+  tags?: string[];
 };
 
 interface CalendarState {
   blocks: TimeBlock[];
+  routines: Routine[];
   currentDate: Date;
   viewMode: 'DAY' | 'WEEK';
   selectedBlockId: string | null;
@@ -28,6 +43,9 @@ interface CalendarState {
   addBlock: (block: Omit<TimeBlock, 'id'>) => void;
   updateBlock: (id: string, updates: Partial<TimeBlock>) => void;
   removeBlock: (id: string) => void;
+
+  addRoutine: (routine: Omit<Routine, 'id'>) => void;
+  removeRoutine: (id: string) => void;
   
   setCurrentDate: (date: Date) => void;
   setViewMode: (mode: 'DAY' | 'WEEK') => void;
@@ -51,6 +69,7 @@ export const useCalendarStore = create<CalendarState>()(
   persist(
     (set) => ({
       blocks: [],
+      routines: [],
       currentDate: new Date(),
       viewMode: 'WEEK',
       selectedBlockId: null,
@@ -64,21 +83,73 @@ export const useCalendarStore = create<CalendarState>()(
       controlMode: 'GUI',
       setControlMode: (mode) => set({ controlMode: mode }),
 
-      addBlock: (block) => {
-        const id = Math.random().toString(36).substring(2, 9);
-        set((state) => ({
-          blocks: [...state.blocks, { ...block, id }],
-          selectedBlockId: id,
-        }));
-      },
-
-      updateBlock: (id, updates) => set((state) => ({
-        blocks: state.blocks.map(b => b.id === id ? { ...b, ...updates } : b),
+      addBlock: (block) => set((state) => ({ 
+        blocks: [...state.blocks, { ...block, id: Math.random().toString(36).substr(2, 9) }] 
       })),
-
-      removeBlock: (id) => set((state) => ({
-        blocks: state.blocks.filter(b => b.id !== id),
-        selectedBlockId: state.selectedBlockId === id ? null : state.selectedBlockId,
+      updateBlock: (id, updates) => set((state) => {
+        const existing = state.blocks.find(b => b.id === id);
+        if (existing) {
+          return { blocks: state.blocks.map(b => b.id === id ? { ...b, ...updates } : b) };
+        } else if (id.startsWith('routine_')) {
+          // Materialize virtual block
+          const [_, routineId, dateStr] = id.split('_');
+          const routine = state.routines.find(r => r.id === routineId);
+          if (routine) {
+            const newBlock: TimeBlock = {
+              id,
+              title: routine.title,
+              description: '',
+              color: routine.color,
+              date: dateStr,
+              startTime: routine.startTime,
+              duration: routine.duration,
+              tags: routine.tags,
+              isRoutine: true,
+              routineId: routine.id,
+              ...updates
+            };
+            return { blocks: [...state.blocks, newBlock] };
+          }
+        }
+        return state;
+      }),
+      removeBlock: (id) => set((state) => {
+        const existing = state.blocks.find(b => b.id === id);
+        if (existing) {
+          if (existing.isRoutine) {
+            // Soft delete materialized routine instance
+            return { blocks: state.blocks.map(b => b.id === id ? { ...b, deleted: true } : b) };
+          }
+          return { blocks: state.blocks.filter(b => b.id !== id) };
+        } else if (id.startsWith('routine_')) {
+          // Materialize as deleted
+          const [_, routineId, dateStr] = id.split('_');
+          const routine = state.routines.find(r => r.id === routineId);
+          if (routine) {
+            const deletedBlock: TimeBlock = {
+              id,
+              title: routine.title,
+              description: '',
+              color: routine.color,
+              date: dateStr,
+              startTime: routine.startTime,
+              duration: routine.duration,
+              tags: routine.tags,
+              isRoutine: true,
+              routineId: routine.id,
+              deleted: true
+            };
+            return { blocks: [...state.blocks, deletedBlock] };
+          }
+        }
+        return state;
+      }),
+      
+      addRoutine: (routine) => set((state) => ({
+        routines: [...state.routines, { ...routine, id: Math.random().toString(36).substr(2, 9) }]
+      })),
+      removeRoutine: (id) => set((state) => ({
+        routines: state.routines.filter(r => r.id !== id),
       })),
 
       setCurrentDate: (date) => set({ currentDate: date }),
@@ -114,7 +185,8 @@ export const useCalendarStore = create<CalendarState>()(
     {
       name: 'slot-storage',
       partialize: (state) => ({ 
-        blocks: state.blocks, 
+        blocks: state.blocks,
+        routines: state.routines,
         theme: state.theme,
         cliOpen: state.cliOpen,
         controlMode: state.controlMode

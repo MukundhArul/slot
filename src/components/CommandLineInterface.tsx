@@ -14,6 +14,7 @@ export default function CommandLineInterface() {
     currentDate,
     blocks,
     addBlock,
+    addRoutine,
     updateBlock,
     removeBlock,
     setViewMode,
@@ -102,6 +103,7 @@ export default function CommandLineInterface() {
     if (mainCommand === '/help') {
       logOutput('HELP - AVAILABLE COMMANDS:', 'info');
       logOutput('  /add "<title>" HH:MM [dur] [#tags...] -> Add task', 'info');
+      logOutput('  /routine "<title>" HH:MM [dur] [--daily|--weekdays] [#tags...] -> Add recurring task', 'info');
       logOutput('  /done "<title>" or /complete "<title>" -> Complete task', 'info');
       logOutput('  /undone "<title>" or /uncomplete "<title>" -> Reactivate task', 'info');
       logOutput('  /rm "<title>" or /remove "<title>" -> Remove task', 'info');
@@ -157,6 +159,53 @@ export default function CommandLineInterface() {
       });
 
       logOutput(`SUCCESS: ADDED "${title.toUpperCase()}" AT ${timeStr} FOR ${durStr}`, 'success');
+      return;
+    }
+
+    if (mainCommand === '/routine') {
+      // Match: /routine "title" HH:MM [duration] [--daily|--weekdays] [tags...]
+      const regex = /^\/routine\s+"([^"]+)"\s+(\d{1,2}:\d{2})(?:\s+([a-zA-Z0-9.]+))?(?:\s+(--(?:daily|weekdays)))?(?:\s+(.*))?$/i;
+      const match = trimmed.match(regex);
+
+      if (!match) {
+        logOutput('ERR: FORMAT MUST BE: /routine "Title" HH:MM [duration] [--daily|--weekdays] [#tags]', 'error');
+        logOutput('  E.G., /routine "Gym" 07:00 1h --daily #health', 'info');
+        return;
+      }
+
+      const title = match[1];
+      const timeStr = match[2];
+      const durStr = match[3] && !match[3].startsWith('--') ? match[3] : '30m';
+      
+      let flag = '--daily';
+      if (match[3] && match[3].startsWith('--')) {
+        flag = match[3];
+      } else if (match[4]) {
+        flag = match[4];
+      }
+
+      const tagsStr = match[5] || '';
+      
+      let daysOfWeek = [0, 1, 2, 3, 4, 5, 6];
+      if (flag === '--weekdays') {
+        daysOfWeek = [1, 2, 3, 4, 5];
+      }
+
+      const duration = parseDuration(durStr);
+      const dateStr = format(currentDate, 'yyyy-MM-dd');
+      const parsedTags = tagsStr.split(/\s+/).filter(Boolean).map(t => t.startsWith('#') ? t : `#${t}`).filter(t => t !== '#');
+
+      addRoutine({
+        title,
+        color: 'bg-color-amber/10',
+        startTime: timeStr,
+        duration,
+        daysOfWeek,
+        startDate: dateStr,
+        tags: parsedTags.length > 0 ? parsedTags : undefined
+      });
+
+      logOutput(`SUCCESS: ADDED ROUTINE "${title.toUpperCase()}" AT ${timeStr} (${flag.replace('--', '').toUpperCase()})`, 'success');
       return;
     }
 

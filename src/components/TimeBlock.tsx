@@ -99,6 +99,7 @@ export default function TimeBlock({ block, onClick, onResize, timeOffset }: Time
       >
         <div className="font-bold border-b border-foreground/20 pb-1 mb-1 pr-14 truncate text-black flex items-center gap-2">
           {block.title}
+          {block.isRoutine && <span className="text-[10px] bg-black/10 px-1 rounded-sm flex items-center justify-center font-bold" title="Routine block">[↻]</span>}
           {block.completed && <span className="w-2 h-2 rounded-full bg-[#cc2200] shrink-0" title="Completed" />}
         </div>
         {block.tags && block.tags.length > 0 && (

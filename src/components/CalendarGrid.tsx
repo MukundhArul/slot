@@ -9,7 +9,7 @@ import { snapToGrid, timeToMinutes, minutesToTime } from '@/lib/utils';
 import TimeBlock from './TimeBlock';
 
 export default function CalendarGrid() {
-  const { blocks, currentDate, viewMode, activeTagFilter, updateBlock, setSelectedBlockId, addBlock } = useCalendarStore();
+  const { blocks, routines, currentDate, viewMode, activeTagFilter, updateBlock, setSelectedBlockId, addBlock } = useCalendarStore();
   const gridRef = useRef<HTMLDivElement>(null);
   const GRID_OFFSET = 16;
 
@@ -100,10 +100,42 @@ export default function CalendarGrid() {
                 const dayStr = format(day, 'yyyy-MM-dd');
                 const dayBlocks = blocks.filter(b => {
                   if (b.date !== dayStr) return false;
+                  if (b.deleted) return false;
                   if (activeTagFilter) {
                     return b.tags?.includes(activeTagFilter);
                   }
                   return true;
+                });
+
+                // Inject virtual routines
+                routines.forEach(routine => {
+                  // Check if routine has started
+                  if (dayStr >= routine.startDate) {
+                    // Check if it runs on this day of the week
+                    if (routine.daysOfWeek.includes(day.getDay())) {
+                      const virtualId = `routine_${routine.id}_${dayStr}`;
+                      // Check if already materialized
+                      const isMaterialized = blocks.some(b => b.id === virtualId);
+                      if (!isMaterialized) {
+                        const virtualBlock = {
+                          id: virtualId,
+                          title: routine.title,
+                          description: '',
+                          color: routine.color,
+                          date: dayStr,
+                          startTime: routine.startTime,
+                          duration: routine.duration,
+                          tags: routine.tags,
+                          isRoutine: true,
+                          routineId: routine.id
+                        };
+                        
+                        if (!activeTagFilter || virtualBlock.tags?.includes(activeTagFilter)) {
+                          dayBlocks.push(virtualBlock);
+                        }
+                      }
+                    }
+                  }
                 });
 
                 return (
