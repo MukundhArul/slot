@@ -5,6 +5,7 @@ import CommandBar from '@/components/CommandBar';
 import CalendarGrid from '@/components/CalendarGrid';
 import TaskModal from '@/components/TaskModal';
 import CommandLineInterface from '@/components/CommandLineInterface';
+import Scratchpad from '@/components/Scratchpad';
 import { useCalendarStore } from '@/store/useCalendarStore';
 import { useEffect, useState } from 'react';
 
@@ -36,8 +37,9 @@ export default function Home() {
         <CommandBar />
         
         {/* Scrollable View Area */}
-        <div className="flex-1 overflow-auto min-h-0 relative">
+        <div className="flex-1 overflow-auto min-h-0 relative flex">
           <CalendarGrid />
+          <Scratchpad />
         </div>
 
         {/* Collapsible Full-Width CLI Drawer */}

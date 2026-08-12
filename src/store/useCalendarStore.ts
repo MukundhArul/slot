@@ -39,6 +39,8 @@ interface CalendarState {
   theme: Theme;
   mobileMenuOpen: boolean;
   activeTagFilter: string | null;
+  scratchpads: Record<string, string>;
+  scratchpadOpen: boolean;
 
   addBlock: (block: Omit<TimeBlock, 'id'>) => void;
   updateBlock: (id: string, updates: Partial<TimeBlock>) => void;
@@ -53,6 +55,8 @@ interface CalendarState {
   setTheme: (theme: Theme) => void;
   setMobileMenuOpen: (open: boolean) => void;
   setActiveTagFilter: (tag: string | null) => void;
+  updateScratchpad: (date: string, content: string) => void;
+  setScratchpadOpen: (open: boolean) => void;
 
   navigatePrevious: () => void;
   navigateNext: () => void;
@@ -76,6 +80,8 @@ export const useCalendarStore = create<CalendarState>()(
       theme: 'PAPER',
       mobileMenuOpen: false,
       activeTagFilter: null,
+      scratchpads: {},
+      scratchpadOpen: false,
 
       cliOpen: true,
       setCliOpen: (open) => set({ cliOpen: open }),
@@ -158,6 +164,10 @@ export const useCalendarStore = create<CalendarState>()(
       setTheme: (theme) => set({ theme }),
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
       setActiveTagFilter: (tag) => set({ activeTagFilter: tag }),
+      updateScratchpad: (date, content) => set((state) => ({
+        scratchpads: { ...state.scratchpads, [date]: content }
+      })),
+      setScratchpadOpen: (open) => set({ scratchpadOpen: open }),
 
       navigatePrevious: () => set((state) => ({
         currentDate: addDays(state.currentDate, state.viewMode === 'DAY' ? -1 : -7)
@@ -189,7 +199,9 @@ export const useCalendarStore = create<CalendarState>()(
         routines: state.routines,
         theme: state.theme,
         cliOpen: state.cliOpen,
-        controlMode: state.controlMode
+        controlMode: state.controlMode,
+        scratchpads: state.scratchpads,
+        scratchpadOpen: state.scratchpadOpen
       }),
     }
   )

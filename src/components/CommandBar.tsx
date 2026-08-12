@@ -5,7 +5,21 @@ import { format, addDays } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 export default function CommandBar() {
-  const { currentDate, viewMode, setViewMode, activeTagFilter, setActiveTagFilter, navigatePrevious, navigateNext, addBlock, duplicateDay, setMobileMenuOpen, controlMode } = useCalendarStore();
+  const { 
+    currentDate, 
+    viewMode, 
+    setViewMode, 
+    activeTagFilter, 
+    setActiveTagFilter, 
+    navigatePrevious, 
+    navigateNext, 
+    addBlock, 
+    duplicateDay, 
+    setMobileMenuOpen, 
+    controlMode,
+    scratchpadOpen,
+    setScratchpadOpen
+  } = useCalendarStore();
   const [timeStr, setTimeStr] = useState('');
   
   const [showDupModal, setShowDupModal] = useState(false);
@@ -81,6 +95,12 @@ export default function CommandBar() {
               className="text-color-amber border border-color-amber/50 px-3 py-1 font-bold hover:bg-color-amber/10 transition-colors flex-shrink-0"
             >
               [ DUPLICATE DAY ]
+            </button>
+            <button 
+              onClick={() => setScratchpadOpen(!scratchpadOpen)}
+              className="hover:bg-foreground hover:text-background font-bold px-2 py-1 transition-colors flex items-center gap-1 flex-shrink-0"
+            >
+              [ NOTES ]
             </button>
             <button 
               onClick={() => {

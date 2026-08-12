@@ -24,7 +24,10 @@ export default function CommandLineInterface() {
     navigateNext,
     setMobileMenuOpen,
     setCliOpen,
-    controlMode
+    controlMode,
+    scratchpads,
+    updateScratchpad,
+    setScratchpadOpen
   } = useCalendarStore();
 
   const [input, setInput] = useState('');
@@ -104,6 +107,8 @@ export default function CommandLineInterface() {
       logOutput('HELP - AVAILABLE COMMANDS:', 'info');
       logOutput('  /add "<title>" HH:MM [dur] [#tags...] -> Add task', 'info');
       logOutput('  /routine "<title>" HH:MM [dur] [--daily|--weekdays] [#tags...] -> Add recurring task', 'info');
+      logOutput('  /note [text] -> Append a note for today', 'info');
+      logOutput('  /note open | close -> Toggle scratchpad', 'info');
       logOutput('  /done "<title>" or /complete "<title>" -> Complete task', 'info');
       logOutput('  /undone "<title>" or /uncomplete "<title>" -> Reactivate task', 'info');
       logOutput('  /rm "<title>" or /remove "<title>" -> Remove task', 'info');
@@ -206,6 +211,32 @@ export default function CommandLineInterface() {
       });
 
       logOutput(`SUCCESS: ADDED ROUTINE "${title.toUpperCase()}" AT ${timeStr} (${flag.replace('--', '').toUpperCase()})`, 'success');
+      return;
+    }
+
+    if (mainCommand === '/note') {
+      const args = trimmed.slice(5).trim();
+      if (!args) {
+        logOutput('ERR: PLEASE PROVIDE TEXT OR "open"/"close"', 'error');
+        return;
+      }
+      
+      if (args.toLowerCase() === 'open') {
+        setScratchpadOpen(true);
+        logOutput('SUCCESS: SCRATCHPAD OPENED', 'success');
+        return;
+      }
+      if (args.toLowerCase() === 'close') {
+        setScratchpadOpen(false);
+        logOutput('SUCCESS: SCRATCHPAD CLOSED', 'success');
+        return;
+      }
+
+      const dateStr = format(currentDate, 'yyyy-MM-dd');
+      const currentNotes = scratchpads[dateStr] || '';
+      const newNotes = currentNotes ? `${currentNotes}\n- ${args}` : `- ${args}`;
+      updateScratchpad(dateStr, newNotes);
+      logOutput('SUCCESS: NOTE APPENDED FOR TODAY', 'success');
       return;
     }
 
