@@ -93,9 +93,10 @@ export default function CommandBar() {
           <>
             <button
               onClick={() => setShowDupModal(true)}
-              className="text-color-amber border border-color-amber/50 px-3 py-1 font-bold hover:bg-color-amber/10 transition-colors flex-shrink-0"
+              className="text-color-amber border border-color-amber/50 px-2 md:px-3 py-1 font-bold hover:bg-color-amber/10 transition-colors flex-shrink-0"
             >
-              [ DUPLICATE DAY ]
+              <span className="hidden md:inline">[ DUPLICATE DAY ]</span>
+              <span className="md:hidden">[ DUP ]</span>
             </button>
             <button 
               onClick={() => setScratchpadOpen(!scratchpadOpen)}
@@ -115,9 +116,10 @@ export default function CommandBar() {
                 });
                 setSelectedBlockId(newId);
               }}
-              className="bg-foreground text-background px-3 py-1 font-bold hover:scale-105 transition-transform flex-shrink-0"
+              className="bg-foreground text-background px-2 md:px-3 py-1 font-bold hover:scale-105 transition-transform flex-shrink-0"
             >
-              [ + ADD TASK ]
+              <span className="hidden md:inline">[ + ADD TASK ]</span>
+              <span className="md:hidden">[ + ADD ]</span>
             </button>
             <button 
               onClick={() => setViewMode('DAY')}

@@ -14,7 +14,7 @@ export default function Scratchpad() {
   const content = scratchpads[dateStr] || '';
 
   return (
-    <div className="w-80 border-l border-foreground/20 flex flex-col h-full bg-background z-20 shrink-0 shadow-[-10px_0_20px_rgba(0,0,0,0.1)] transition-all duration-300">
+    <div className="absolute inset-y-0 right-0 w-full md:relative md:w-80 border-l border-foreground/20 flex flex-col h-full bg-background z-30 shrink-0 shadow-[-10px_0_20px_rgba(0,0,0,0.1)] transition-all duration-300">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-foreground/20 p-4 shrink-0">
         <h2 className="font-bold flex items-center gap-2">

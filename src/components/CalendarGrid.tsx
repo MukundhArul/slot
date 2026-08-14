@@ -71,7 +71,7 @@ export default function CalendarGrid() {
         <div className="flex-1 overflow-auto relative flex flex-col">
 
           {/* Day Headers (Sticky) */}
-          <div className="flex border-b border-foreground/50 bg-surface pl-16 sticky top-0 z-30 min-w-[800px] md:min-w-0">
+          <div className={`flex border-b border-foreground/50 bg-surface pl-16 sticky top-0 z-30 ${viewMode === 'WEEK' ? 'min-w-[800px] md:min-w-0' : ''}`}>
             {days.map((day) => (
               <div key={day.toISOString()} className="flex-1 text-center py-2 border-r border-foreground/20 text-sm font-bold truncate">
                 {format(day, 'EEE dd/MM').toUpperCase()}
@@ -80,7 +80,7 @@ export default function CalendarGrid() {
           </div>
 
           {/* Grid Content */}
-          <div className="flex-1 flex min-w-[800px] md:min-w-0">
+          <div className={`flex-1 flex ${viewMode === 'WEEK' ? 'min-w-[800px] md:min-w-0' : ''}`}>
             {/* Time Y-Axis */}
             <div className="w-16 relative border-r border-foreground/50 bg-surface sticky left-0 z-20" style={{ height: `${24 * HOUR_HEIGHT + GRID_OFFSET}px` }}>
               {HOURS.map((hour) => (

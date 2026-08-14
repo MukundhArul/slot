@@ -53,9 +53,9 @@ export default function TaskModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
       <div
-        className="w-[400px] border border-color-green bg-surface-raised shadow-lg shadow-color-green/20"
+        className="w-[90vw] max-w-[400px] max-h-[90vh] overflow-y-auto border border-color-green bg-surface-raised shadow-lg shadow-color-green/20"
       >
-        <div className="bg-color-green text-[#050505] px-4 py-2 font-bold uppercase flex justify-between">
+        <div className="bg-color-green text-[#050505] px-4 py-2 font-bold uppercase flex justify-between sticky top-0 z-10">
           <span>&gt; EDIT_TASK.exe</span>
           <button onClick={() => setSelectedBlockId(null)} className="text-[#cc2200] hover:bg-[#cc2200]/20 px-1 font-bold">[ X ]</button>
         </div>
