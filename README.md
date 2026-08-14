@@ -22,11 +22,15 @@
 
 ## Features
 
-- **Retro Terminal UI**: Sharp edges, Geist Mono typography, three distinct terminal themes (Paper, Dark Amber, E-Ink).
+- **Retro Terminal UI**: Sharp edges, Geist Mono typography, and authentic themes including Paper, AMOLED Dark Amber, and E-Ink.
+- **Command Line Interface (CLI)**: Control your entire day using keyboard commands like `/add`, `/routine`, and `/note`.
 - **Drag & Drop Planner**: Seamlessly move and resize time blocks across days and hours using `@dnd-kit`.
-- **Focus Timer**: A dedicated Pomodoro mode with deep work duration presets (25m, 1h, 2h, 3h).
-- **Audio Notifications**: Authentic Web Audio API square-wave terminal beeps when timers complete.
+- **Recurring Routines**: Setup daily or weekly virtual routines (e.g. `/routine "Gym" 07:00 1h --daily`) that automatically populate your grid.
+- **Daily Markdown Scratchpad**: A collapsible drawer for jotting down quick notes, thoughts, and sub-tasks for the day with full Markdown support.
+- **Task Tagging & Filtering**: Assign tags (`#work`, `#gym`) to blocks and instantly filter your calendar view.
+- **Focus Timer**: A dedicated Pomodoro mode with deep work duration presets and Web Audio API square-wave terminal beeps.
 - **Productivity Dashboard**: Track your task completion rate and deep work hours with a GitHub-style 90-day heatmap.
+- **Mobile Optimized**: Fully responsive layout with a horizontal-scrolling week view and slide-over drawers for mobile screens.
 - **Offline PWA Support**: Installable on desktop and mobile. Works 100% offline via local storage and Service Worker caching.
 
 ## Tech Stack
