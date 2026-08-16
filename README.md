@@ -1,62 +1,92 @@
 <p align="center">
-  <img src="public/logo.svg" alt="SLOT Logo" width="100"/>
+  <img src="public/logo.svg" alt="SLOT Logo" width="120"/>
 </p>
 
-<h1 align="center">SLOT</h1>
+<h1 align="center">S L O T</h1>
 
 <p align="center">
-  <strong>A highly interactive, offline-first time management application with a strict Retro Sci-Fi terminal aesthetic.</strong>
+  <strong>> SYS.INIT : TIME MANAGEMENT PROTOCOL ONLINE</strong>
+</p>
+<p align="center">
+  A brutalist, offline-first time-blocking tool wrapped in a retro-futuristic terminal aesthetic.
 </p>
 
-## Overview
-
-**SLOT** is a modern calendar, time-blocking tool, and Pomodoro focus timer wrapped in a brutalist, retro-futuristic terminal UI. It features a drag-and-drop grid system allowing you to effortlessly organize your day, track your deep work hours, and analyze your productivity streaks.
+<br/>
 
 <p align="center">
   <img src="public/screenshot-planner.png" alt="SLOT Day Planner" width="800" />
 </p>
 
-<p align="center">
-  <img src="public/screenshot-timer.png" alt="SLOT Focus Timer" width="800" />
-</p>
+## > OVERVIEW
 
-## Features
+**SLOT** is not just another calendar. It's a deeply intentional command center for your day. Built for developers, designers, and terminal enthusiasts, SLOT combines visual drag-and-drop time-blocking with a keyboard-first Command Line Interface (CLI). 
 
-- **Retro Terminal UI**: Sharp edges, Geist Mono typography, and authentic themes including Paper, AMOLED Dark Amber, and E-Ink.
-- **Command Line Interface (CLI)**: Control your entire day using keyboard commands like `/add`, `/routine`, and `/note`.
-- **Drag & Drop Planner**: Seamlessly move and resize time blocks across days and hours using `@dnd-kit`.
-- **Recurring Routines**: Setup daily or weekly virtual routines (e.g. `/routine "Gym" 07:00 1h --daily`) that automatically populate your grid.
-- **Daily Markdown Scratchpad**: A collapsible drawer for jotting down quick notes, thoughts, and sub-tasks for the day with full Markdown support.
-- **Task Tagging & Filtering**: Assign tags (`#work`, `#gym`) to blocks and instantly filter your calendar view.
-- **Focus Timer**: A dedicated Pomodoro mode with deep work duration presets and Web Audio API square-wave terminal beeps.
-- **Productivity Dashboard**: Track your task completion rate and deep work hours with a GitHub-style 90-day heatmap.
-- **Mobile Optimized**: Fully responsive layout with a horizontal-scrolling week view and slide-over drawers for mobile screens.
-- **Offline PWA Support**: Installable on desktop and mobile. Works 100% offline via local storage and Service Worker caching.
+No cloud sync delays. No loading spinners. Your data lives exactly where it belongs: entirely on your local machine.
 
-## Tech Stack
+---
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+## > CAPABILITIES
+
+### ?? Command Line Interface (CLI)
+Why reach for a mouse when your hands are already on the keyboard? Press `~` or use the command bar to rapidly construct your day.
+- `/add "Deep Work" 09:00 2h #focus` — Instantly blocks 2 hours.
+- `/routine "Gym" 07:00 1h --daily` — Injects a virtual block every single day.
+- `/note "Review PR #42"` — Appends a thought to your daily scratchpad.
+
+### ??? Drag & Drop Matrix
+Prefer visual organization? Grab blocks and snap them to the 15-minute grid. Resize them dynamically to adjust durations on the fly.
+
+### ?? Daily Markdown Scratchpad
+Every day gets a dedicated, collapsible drawer. Jot down meeting notes, sub-tasks, or code snippets with full GitHub-flavored Markdown support.
+
+### ?? Focus Timer
+Lock in. Switch to the dedicated Pomodoro mode with deep work duration presets. When time is up, authentic Web Audio API square-wave terminal beeps will pull you back to reality.
+
+### ?? Telemetry & Heatmap
+Track your execution. A GitHub-style 90-day heatmap visualizes your deep work consistency and task completion rates over time.
+
+### ?? Responsive & PWA-Ready
+Install SLOT directly to your desktop or mobile device. The layout gracefully shifts to a horizontal-scrolling timeline on phones, with absolute slide-over drawers to maximize screen real estate. 100% offline-capable via Service Workers.
+
+### ?? Authentic Themes
+- **PAPER**: High-contrast, brutalist black-on-beige.
+- **DARK AMBER**: True AMOLED `#000000` background with piercing amber accents.
+- **E-INK**: Monochromatic, distraction-free grayscale.
+
+---
+
+## > ARCHITECTURE
+
+Built for zero-latency performance and absolute data privacy.
+
+- **Engine**: [Next.js 15](https://nextjs.org/)
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
-- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
-- **Drag & Drop**: [dnd-kit](https://dndkit.com/)
-- **Dates**: [date-fns](https://date-fns.org/)
+- **State & Persistence**: [Zustand](https://zustand-demo.pmnd.rs/) with `localStorage`
+- **Interactions**: [dnd-kit](https://dndkit.com/)
+- **Time Manipulation**: [date-fns](https://date-fns.org/)
 
-## Getting Started
+---
 
-First, run the development server:
+## > INITIALIZATION
+
+### Local Execution
 
 ```bash
+git clone https://github.com/MukundhArul/slot.git
+cd slot
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Navigate to `http://localhost:3000` to access the terminal.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the application in action.
+### Production Deployment
 
-## Deployment
+SLOT requires **zero backend configuration**. Because all state is handled locally via browser APIs, you can deploy it instantaneously to Vercel. 
 
-This app is optimized for instantaneous deployment on [Vercel](https://vercel.com/new). Since it relies exclusively on `localStorage` and a Service Worker, it requires absolutely zero backend configuration.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+---
+
+<p align="center">
+  <i>> END OF FILE</i>
+</p>
